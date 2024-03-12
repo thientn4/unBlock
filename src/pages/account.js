@@ -36,7 +36,7 @@ function Account() {
         groups:{
             backgroundColor:'rgb(157,195,230)',
             height:'100svh',
-            overflowY:'scroll'
+            overflowY:'auto'
         },
             groupList:{
                 paddingTop:'0.45in'
