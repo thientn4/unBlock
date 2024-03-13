@@ -1,8 +1,12 @@
 import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {useNavigate} from 'react-router-dom';
 
 function Account() {
     const navigate=useNavigate();
+    let [myEditor,setEditor]=useState(null);
     let blocks=[
         {
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
@@ -166,6 +170,17 @@ function Account() {
             },
             intro:{
                 color:'white'
+            },
+            input:{
+              padding:'0.1in',
+              fontSize:'0.20in',
+              borderRadius:'0.1in',
+              marginTop:'0.15in',
+              marginBottom:'0.15in',
+              border: '0.5px solid',
+              borderColor: 'rgb(46,117,182)',
+              textAlign:'center',
+              width:'100%'
             }
     }
     return (
@@ -198,9 +213,50 @@ function Account() {
                 </div>
             </div>
             <div style={styles.account}>
-                <img style={styles.picture} src={require('../assets/picture.png')} alt='logo'></img> 
-                <div style={styles.email}>ntmthien01@gmail.com</div>
-                <div style={styles.button}>sign out</div>
+                <div style={{
+                    height:'100vh',
+                    width:'100%',
+                    overflowY:'auto',
+                    display:'flex',
+                    flexDirection:'column',
+                    backgroundColor:'white',
+                    alignItems:'center', 
+                }}>
+                    <div style={{width:'95%', backgroundColor:'black'}}>
+                        <input style={styles.input} placeholder="Title"></input>
+                        <div style={{
+                            overflowX:'auto',
+                            display:'flex',
+                            flexDirection:'row'
+                        }}>
+                            {blocks.map((block,index)=>(
+                                <div style={{
+                                    marginBottom:'0.15in',
+                                    backgroundColor:'rgb(46,117,182)',
+                                    height:'0.32in',
+                                    width:'fit-content',
+                                    borderRadius:'0.4in',
+                                    color:'white',
+                                    fontSize:'0.20in',
+                                    padding:'0.02in',
+                                    paddingLeft:'0.15in',
+                                    paddingRight:'0.15in',
+                                    marginRight:'0.1in'
+                                }}>{"fhjafkashfkajsfkajfaks"}</div>
+                            ))}
+                        </div>
+                        <CKEditor
+                            editor={ ClassicEditor }
+                            onReady={ editor => {
+                                // You can store the "editor" and use when it is needed.
+                                setEditor(editor)
+                            } }
+                            onChange={ ( event ) => {
+                                console.log( myEditor.getData() );
+                            } }
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     );
