@@ -6,7 +6,9 @@ import {useNavigate} from 'react-router-dom';
 
 function Account() {
     const navigate=useNavigate();
-    let [myEditor,setEditor]=useState(null);
+    let [postEditor,setPostEditor]=useState(null);
+    let [replyEditor,setReplyEditor]=useState(null);
+    let [page,setPage]=useState(3);
     let blocks=[
         {
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
@@ -72,7 +74,9 @@ function Account() {
             justifyContent:'center',
             alignItems:'center', 
             width:'calc(100% - 3.5in)',
-            height:'100svh'
+            height:'100svh',
+            position:'fixed',
+            right:0
         },
             picture:{
                 height:'2in',
@@ -96,7 +100,9 @@ function Account() {
         groups:{
             backgroundColor:'rgb(157,195,230)',
             height:'100svh',
-            overflowY:'auto'
+            overflowY:'auto',
+            zIndex:100,
+            position:'fixed'
         },
             groupList:{
                 paddingTop:'0.45in',
@@ -180,7 +186,92 @@ function Account() {
               border: '0.5px solid',
               borderColor: 'rgb(46,117,182)',
               textAlign:'center',
-              width:'100%'
+              width:'100%',
+              boxSizing:'border-box'
+            },
+            groupPage:{
+                height:'100vh',
+                width:'100%',
+                minWidth:'8in',
+                overflowY:'auto',
+                display:'flex',
+                flexDirection:'column',
+                backgroundColor:'white',
+                alignItems:'center', 
+            },
+            tags:{
+                overflowX:'auto',
+                display:'flex',
+                flexDirection:'row'
+            },
+            tag:{
+                marginBottom:'0.15in',
+                backgroundColor:'rgb(46,117,182)',
+                height:'0.32in',
+                width:'fit-content',
+                borderRadius:'0.4in',
+                color:'white',
+                fontSize:'0.20in',
+                padding:'0.02in',
+                paddingLeft:'0.15in',
+                paddingRight:'0.15in'
+            },
+            bar:{
+                marginTop:'0.15in',
+                marginBottom:'0.15in',
+                display:'flex',
+                flexDirection:'row',
+                justifyContent:'space-between'
+            },
+            bottomItem:{
+                color:'rgb(46,117,182)',
+                fontSize:'0.18in'
+            },
+            bottomSubBar:{
+                display:'flex',
+                flexDirection:'row',
+                justifyContent:'space-between',
+                width:'1.5in'
+            },
+            replyOg:{
+                display:'flex',
+                flexDirection:'row',
+                justifyContent:'space-between',
+                maxWidth:'4in',
+                marginBottom:'0.15in',
+                marginLeft:'0.15in',
+                backgroundColor:'rgb(46,117,182)',
+                height:'0.32in',
+                borderRadius:'0.4in',
+                color:'white',
+                fontSize:'0.20in',
+                padding:'0.02in',
+                paddingLeft:'0.15in',
+                paddingRight:'0.15in'
+            },
+            replyOgPost:{
+                textOverflow: 'ellipsis',
+                maxWidth:'3.6in',
+                textAlign:'left',
+                whiteSpace:'nowrap',
+                overflow:'hidden',
+                marginRight:'0.3in'
+            },
+            replyText:{
+                padding:'0.04in',
+                paddingLeft:0,
+                color:'rgb(46,117,182)',
+                fontSize:'0.18in'
+            },
+            header:{
+                textOverflow: 'ellipsis',
+                width:'6in',
+                textAlign:'left',
+                whiteSpace:'nowrap',
+                overflow:'hidden',
+                fontWeight:'bold',
+                fontSize:'0.25in',
+                color:'rgb(89,89,89)'
             }
     }
     return (
@@ -213,35 +304,14 @@ function Account() {
                 </div>
             </div>
             <div style={styles.account}>
-                <div style={{
-                    height:'100vh',
-                    width:'100%',
-                    overflowY:'auto',
-                    display:'flex',
-                    flexDirection:'column',
-                    backgroundColor:'white',
-                    alignItems:'center', 
-                }}>
-                    <div style={{width:'95%', backgroundColor:'black'}}>
+                {page===3 && <div style={styles.groupPage}>
+                    <div style={{width:'95%'}}>
                         <input style={styles.input} placeholder="Title"></input>
-                        <div style={{
-                            overflowX:'auto',
-                            display:'flex',
-                            flexDirection:'row'
-                        }}>
+                        <div style={styles.tags}>
                             {blocks.map((block,index)=>(
                                 <div style={{
-                                    marginBottom:'0.15in',
-                                    backgroundColor:'rgb(46,117,182)',
-                                    height:'0.32in',
-                                    width:'fit-content',
-                                    borderRadius:'0.4in',
-                                    color:'white',
-                                    fontSize:'0.20in',
-                                    padding:'0.02in',
-                                    paddingLeft:'0.15in',
-                                    paddingRight:'0.15in',
-                                    marginRight:'0.1in'
+                                    ...styles.tag,
+                                    marginLeft:index!==0?'0.1in':0
                                 }}>{"fhjafkashfkajsfkajfaks"}</div>
                             ))}
                         </div>
@@ -249,14 +319,63 @@ function Account() {
                             editor={ ClassicEditor }
                             onReady={ editor => {
                                 // You can store the "editor" and use when it is needed.
-                                setEditor(editor)
+                                setPostEditor(editor)
                             } }
                             onChange={ ( event ) => {
-                                console.log( myEditor.getData() );
+                                console.log( postEditor.getData() );
                             } }
                         />
+                        <div style={styles.bar}>
+                            <div>
+                                <input type="checkbox"></input>
+                                <label style={styles.bottomItem}> private to admin </label>
+                            </div>
+                            <div style={styles.bottomSubBar}>
+                                <div style={styles.bottomItem}>post</div>
+                                <div style={styles.bottomItem}>cancel</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </div>}
+                {page===2 && <div style={styles.groupPage}>
+                    <div style={{width:'95%'}}>
+                        <div style={styles.bar}>
+                            <div style={styles.header}>
+                                {"fjefjewfewhfwkehkewhfkewfhdrdhfhyjygjjbjjhuukhk"}
+                            </div>
+                        </div>
+                        <div style={{
+                            display:'flex',
+                            flexDirection:'row'
+                        }}>
+                            <div style={styles.replyText}>Reply to</div>
+                            <div style={styles.replyOg}>
+                                <div style={styles.replyOgPost}>{"fhjafkashfkajsfkajfakswfwefwefwefwegwegwegwegwegwegwegewgwgeegwewgwe"}</div>
+                                <div>X</div>
+                            </div>
+                        </div>
+                        <CKEditor
+                            editor={ ClassicEditor }
+                            onReady={ editor => {
+                                // You can store the "editor" and use when it is needed.
+                                setPostEditor(editor)
+                            } }
+                            onChange={ ( event ) => {
+                                console.log( postEditor.getData() );
+                            } }
+                        />
+                        <div style={styles.bar}>
+                            <div>
+                                <input type="checkbox"></input>
+                                <label style={styles.bottomItem}> private to OP & admin</label>
+                            </div>
+                            <div style={styles.bottomSubBar}>
+                                <div style={styles.bottomItem}>post</div>
+                                <div style={styles.bottomItem}>cancel</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>}
             </div>
         </div>
     );
