@@ -3,6 +3,7 @@ import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 
 function EditGroup() {
+  const navigate=useNavigate();
   let groups=['rewqgewfwfwqefewqfeqgqgqefweqfqwfewqfewq',2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]
   const styles={
     title:{
@@ -111,8 +112,8 @@ function EditGroup() {
             ))}
           </div>
           <div style={styles.buttons}>
-            <div style={styles.button}>Add</div>
-            <div style={styles.button}>Cancel</div>
+            <div style={styles.button} onClick={()=>{navigate(-1)}}>Add</div>
+            <div style={styles.button} onClick={()=>{navigate(-1)}}>Cancel</div>
           </div>
         </div>
       </div>

@@ -8,64 +8,198 @@ function Account() {
     const navigate=useNavigate();
     let [postEditor,setPostEditor]=useState(null);
     let [replyEditor,setReplyEditor]=useState(null);
-    let [page,setPage]=useState(3);
-    let blocks=[
+    let [page,setPage]=useState(1);
+    let posts=[
         {
+            id:0,
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
             timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.'
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
         },
         {
+            id:1,
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
             timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.'
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
         },
         {
+            id:2,
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
             timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.'
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
         },
         {
+            id:3,
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
             timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.'
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
         },
         {
+            id:4,
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
             timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.'
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
         },
         {
+            id:5,
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
             timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.'
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
         },
         {
+            id:6,
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
             timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.'
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
         },
         {
+            id:7,
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
             timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.'
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
         },
         {
+            id:8,
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
             timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.'
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
         },
         {
+            id:9,
             title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
             timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.'
-        },
-        {
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.'
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
         },
     ]
+    let replies=[
+        {
+            id:0,
+            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
+            timestamp: '03/05/2024 - 10:30',
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
+        },
+        {
+            id:1,
+            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
+            timestamp: '03/05/2024 - 10:30',
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
+        },
+        {
+            id:2,
+            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
+            timestamp: '03/05/2024 - 10:30',
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:0,
+            op_email:'ntmthien01@gmail.com'
+        },
+        {
+            id:3,
+            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
+            timestamp: '03/05/2024 - 10:30',
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
+        },
+        {
+            id:4,
+            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
+            timestamp: '03/05/2024 - 10:30',
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
+        },
+        {
+            id:5,
+            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
+            timestamp: '03/05/2024 - 10:30',
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
+        },
+        {
+            id:6,
+            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
+            timestamp: '03/05/2024 - 10:30',
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:2,
+            op_email:'ntmthien01@gmail.com'
+        },
+        {
+            id:7,
+            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
+            timestamp: '03/05/2024 - 10:30',
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:1,
+            op_email:'ntmthien01@gmail.com'
+        },
+        {
+            id:8,
+            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
+            timestamp: '03/05/2024 - 10:30',
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:null,
+            op_email:'ntmthien01@gmail.com'
+        },
+        {
+            id:9,
+            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
+            timestamp: '03/05/2024 - 10:30',
+            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
+            is_private: true,
+            reply_to:6,
+            op_email:'ntmthien01@gmail.com'
+        },
+    ]
+    let post_tags=[
+        'HW1','HW2','HW3','HW4','HW5','HW6',
+    ]
+    let group_tags=[
+        'HW1','HW2','HW3','HW4','HW5','HW6','HW7','HW8','HW9','HW10','HW11',
+    ]
+    const content='<h2>fwqfwqfqwf</h2><p>qwrqwrwqr</p><p>qwrwqrq<i><strong>wrqwrq</strong></i>w</p><p></p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1. lol</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; a. helllo</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; b. quack</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2. hello</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3. hey</p><h3>dasdasfasfas</h3><p>asdsadasdasdasdasadad</p><p>asdasdadas</p>'
     const styles={
         account:{
             display:'flex',
@@ -106,7 +240,7 @@ function Account() {
         },
             groupList:{
                 paddingTop:'0.45in',
-                paddingBottom:'0.3in'
+                paddingBottom:'0.45in'
             },
             tools:{
                 display:'flex',
@@ -221,7 +355,8 @@ function Account() {
                 marginBottom:'0.15in',
                 display:'flex',
                 flexDirection:'row',
-                justifyContent:'space-between'
+                justifyContent:'space-between',
+                marginTop:'0.2in'
             },
             bottomItem:{
                 color:'rgb(46,117,182)',
@@ -238,8 +373,8 @@ function Account() {
                 flexDirection:'row',
                 justifyContent:'space-between',
                 maxWidth:'4in',
+                width:'fit-content',
                 marginBottom:'0.15in',
-                marginLeft:'0.15in',
                 backgroundColor:'rgb(46,117,182)',
                 height:'0.32in',
                 borderRadius:'0.4in',
@@ -254,11 +389,11 @@ function Account() {
                 maxWidth:'3.6in',
                 textAlign:'left',
                 whiteSpace:'nowrap',
-                overflow:'hidden',
-                marginRight:'0.3in'
+                overflow:'hidden'
             },
             replyText:{
                 padding:'0.04in',
+                marginRight:'0.15in',
                 paddingLeft:0,
                 color:'rgb(46,117,182)',
                 fontSize:'0.18in'
@@ -272,6 +407,11 @@ function Account() {
                 fontWeight:'bold',
                 fontSize:'0.25in',
                 color:'rgb(89,89,89)'
+            },
+            post:{
+                borderBottom: '0.04in solid',
+                borderColor: 'rgb(46,117,182)',
+                marginBottom:'0.2in'
             }
     }
     return (
@@ -286,10 +426,10 @@ function Account() {
                 <div style={styles.tools}>
                     <img style={styles.tool} src={require('../assets/filter.png')} alt='logo'></img> 
                     <input style={styles.search} placeholder="search"></input>
-                    <img style={styles.tool} src={require('../assets/add.png')} alt='logo'></img> 
+                    <img style={styles.tool} src={require('../assets/add.png')} alt='logo' onClick={()=>{setPage(3)}}></img> 
                 </div>
                 <div style={styles.groupList}>
-                    {blocks.map((block,index)=>(
+                    {posts.map((block,index)=>(
                         <div style={styles.row}>
                             <div style={styles.title}>{block.title}</div>
                             <div style={styles.timestamp}>{block.timestamp}</div>
@@ -298,9 +438,9 @@ function Account() {
                     ))}
                 </div>
                 <div style={styles.intros}>
-                    <img style={styles.tool} src={require('../assets/account.png')} alt='logo'></img> 
+                    <img style={styles.tool} src={require('../assets/account.png')} alt='logo' onClick={()=>{navigate("../account")}}></img> 
                     <div style={styles.intro}> Group 1 </div>
-                    <img style={styles.tool} src={require('../assets/edit.png')} alt='logo'></img> 
+                    <img style={styles.tool} src={require('../assets/edit.png')} alt='logo' onClick={()=>{navigate("edit")}}></img> 
                 </div>
             </div>
             <div style={styles.account}>
@@ -308,7 +448,7 @@ function Account() {
                     <div style={{width:'95%'}}>
                         <input style={styles.input} placeholder="Title"></input>
                         <div style={styles.tags}>
-                            {blocks.map((block,index)=>(
+                            {posts.map((block,index)=>(
                                 <div style={{
                                     ...styles.tag,
                                     marginLeft:index!==0?'0.1in':0
@@ -317,6 +457,18 @@ function Account() {
                         </div>
                         <CKEditor
                             editor={ ClassicEditor }
+                            config={{
+                                toolbar:[
+                                    "heading",
+                                    "|",
+                                    "bold",
+                                    "italic",
+                                    "uploadImage",
+                                    "|",
+                                    "undo",
+                                    "redo"
+                                ]
+                            }}
                             onReady={ editor => {
                                 // You can store the "editor" and use when it is needed.
                                 setPostEditor(editor)
@@ -331,8 +483,8 @@ function Account() {
                                 <label style={styles.bottomItem}> private to admin </label>
                             </div>
                             <div style={styles.bottomSubBar}>
-                                <div style={styles.bottomItem}>post</div>
-                                <div style={styles.bottomItem}>cancel</div>
+                                <div style={styles.bottomItem} onClick={()=>{setPage(1)}}>post</div>
+                                <div style={styles.bottomItem} onClick={()=>{setPage(1)}}>cancel</div>
                             </div>
                         </div>
                     </div>
@@ -351,17 +503,26 @@ function Account() {
                             <div style={styles.replyText}>Reply to</div>
                             <div style={styles.replyOg}>
                                 <div style={styles.replyOgPost}>{"fhjafkashfkajsfkajfakswfwefwefwefwegwegwegwegwegwegwegewgwgeegwewgwe"}</div>
-                                <div>X</div>
                             </div>
                         </div>
                         <CKEditor
                             editor={ ClassicEditor }
+                            config={{
+                                toolbar:[
+                                    "bold",
+                                    "italic",
+                                    "uploadImage",
+                                    "|",
+                                    "undo",
+                                    "redo"
+                                ]
+                            }}
                             onReady={ editor => {
                                 // You can store the "editor" and use when it is needed.
-                                setPostEditor(editor)
+                                setReplyEditor(editor)
                             } }
                             onChange={ ( event ) => {
-                                console.log( postEditor.getData() );
+                                console.log( replyEditor.getData() );
                             } }
                         />
                         <div style={styles.bar}>
@@ -370,9 +531,96 @@ function Account() {
                                 <label style={styles.bottomItem}> private to OP & admin</label>
                             </div>
                             <div style={styles.bottomSubBar}>
-                                <div style={styles.bottomItem}>post</div>
-                                <div style={styles.bottomItem}>cancel</div>
+                                <div style={styles.bottomItem} onClick={()=>{setPage(1)}}>post</div>
+                                <div style={styles.bottomItem} onClick={()=>{setPage(1)}}>cancel</div>
                             </div>
+                        </div>
+                    </div>
+                </div>}
+                {page===1 && <div style={styles.groupPage}>
+                    <div style={{width:'95%'}}>
+                        <div style={styles.post}>
+                            <div style={styles.bar}>
+                                <div style={styles.header}>
+                                    {"fjefjewfewhfwkehkewhfkewfhdrdhfhyjygjjbjjhuukhk"}
+                                </div>
+                            </div>
+                            <div style={styles.tags}>
+                                {post_tags.map((post_tag,index)=>(
+                                    <div style={{
+                                        ...styles.tag,
+                                        marginLeft:index!==0?'0.1in':0
+                                    }}>{post_tag}</div>
+                                ))}
+                            </div>
+                            <div style={{
+                                width:'100%',
+                                textAlign:'left'
+                            }} dangerouslySetInnerHTML={{ __html: content }}></div>
+                            <div style={styles.bar}>
+                                    <div style={styles.bottomItem}>make private</div>
+                                <div style={styles.bottomSubBar}>
+                                    <div style={styles.bottomItem} onClick={()=>{setPage(2)}}>reply</div>
+                                    <div style={styles.bottomItem} onClick={()=>{setPage(3)}}>edit</div>
+                                    <div style={styles.bottomItem}>delete</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            {replies.map((reply,index)=>(
+                                <div>
+                                    <div style={{
+                                        display:'flex',
+                                        flexDirection:'row',
+                                        justifyContent:'space-between',
+                                        marginTop:'0.03in'
+                                    }}>
+                                        <div style={{
+                                            display:'flex',
+                                            flexDirection:'row',
+                                            justifyContent:'left'
+                                        }}>
+                                            <div style={{
+                                                backgroundColor:'rgb(46,117,182)',
+                                                height:'0.3in',
+                                                width:'0.3in',
+                                                borderRadius:'0.3in',
+                                                marginRight:'0.3in'
+                                            }}></div>
+                                            <div style={styles.title}>{reply.op_email}</div>
+                                        </div>
+                                        <div style={styles.timestamp}>{reply.timestamp}</div>
+                                    </div>
+                                    <div style={{
+                                        marginLeft:'0.13in',
+                                        borderLeft: '0.04in solid',
+                                        borderColor: 'rgb(46,117,182)',
+                                        paddingLeft:'0.44in',
+                                        textAlign:'left',
+                                        marginTop:'0.008in'
+                                    }}>
+                                        {reply.reply_to!==null && <div style={styles.replyOg}>
+                                            <div style={styles.replyOgPost}>{"fqekfkqwfkjwqjdwqkjdqwdkjwqdkjwnqkwfjnqkjwnfkwqf"}</div>
+                                        </div>}
+                                        <div dangerouslySetInnerHTML={{ __html: content }}></div>
+                                        <div style={{
+                                            width:'100%',
+                                            display:'flex',
+                                            flexDirection:'row',
+                                            justifyContent:'space-between',
+                                            paddingTop:'0.2in',
+                                            paddingBottom:'0.3in'
+                                        }}>
+                                            <div style={styles.bottomItem}>make private</div>
+                                            <div style={styles.bottomSubBar}>
+                                                <div style={styles.bottomItem} onClick={()=>{setPage(2)}}>reply</div>
+                                                <div style={styles.bottomItem} onClick={()=>{setPage(2)}}>edit</div>
+                                                <div style={styles.bottomItem}>delete</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>}

@@ -3,7 +3,79 @@ import {useNavigate} from 'react-router-dom';
 
 function Account() {
     const navigate=useNavigate();
-    let groups=['rqwrwfdsasfdsafdsasadgsdaffasffdsaf',2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]
+    let groups=[
+        {
+            id:0,
+            name:'Group One',
+            owner:'ntmthien01@gmail.com'
+        },
+        {
+            id:1,
+            name:'Group Two',
+            owner:'ntmthien2001@gmail.com'
+        },
+        {
+            id:2,
+            name:'Group Three',
+            owner:'ntmthien01@gmail.com'
+        },
+        {
+            id:3,
+            name:'Group Four',
+            owner:'ntmthien01@gmail.com'
+        },
+        {
+            id:4,
+            name:'Group Five',
+            owner:'ntmthien2001@gmail.com'
+        },
+        {
+            id:5,
+            name:'Group Six',
+            owner:'ntmthien2001@gmail.com'
+        },
+        {
+            id:6,
+            name:'Group Seven',
+            owner:'ntmthien2001@gmail.com'
+        },
+        {
+            id:7,
+            name:'Group Eight',
+            owner:'ntmthien01@gmail.com'
+        },
+        {
+            id:8,
+            name:'Group Nine',
+            owner:'ntmthien2001@gmail.com'
+        },
+        {
+            id:9,
+            name:'Group Ten',
+            owner:'ntmthien2001@gmail.com'
+        },
+        {
+            id:10,
+            name:'Group Eleven',
+            owner:'ntmthien01@gmail.com'
+        },
+        {
+            id:11,
+            name:'Group Twelve',
+            owner:'ntmthien01@gmail.com'
+        },
+        {
+            id:12,
+            name:'Group Thirteen',
+            owner:'ntmthien2001@gmail.com'
+        },
+        {
+            id:13,
+            name:'Group Fourteen',
+            owner:'ntmthien2001@gmail.com'
+        },
+
+    ]
     const styles={
         account:{
             display:'flex',
@@ -36,7 +108,9 @@ function Account() {
         groups:{
             backgroundColor:'rgb(157,195,230)',
             height:'100svh',
-            overflowY:'auto'
+            overflowY:'auto',
+            overflowX:'hidden',
+            minWidth:'3.3in'
         },
             groupList:{
                 paddingTop:'0.45in'
@@ -97,12 +171,12 @@ function Account() {
                 <div style={styles.tools}>
                     <img style={styles.tool} src={require('../assets/filter.png')} alt='logo'></img> 
                     <input style={styles.search} placeholder="search"></input>
-                    <img style={styles.tool} src={require('../assets/add.png')} alt='logo'></img> 
+                    <img style={styles.tool} src={require('../assets/add.png')} onClick={()=>{navigate("../group/edit")}} alt='logo'></img> 
                 </div>
                 <div style={styles.groupList}>
                     {groups.map((group,index)=>(
                         <div style={styles.row}>
-                            <div style={styles.rowItem}>{group}</div>
+                            <div style={styles.rowItem} onClick={()=>{navigate("../group")}}>{group.name}</div>
                             <div>X</div>
                         </div>
                     ))}
@@ -111,7 +185,7 @@ function Account() {
             <div style={styles.account}>
                 <img style={styles.picture} src={require('../assets/picture.png')} alt='logo'></img> 
                 <div style={styles.email}>ntmthien01@gmail.com</div>
-                <div style={styles.button}>sign out</div>
+                <div style={styles.button}  onClick={()=>{navigate("..")}}>sign out</div>
             </div>
         </div>
     );

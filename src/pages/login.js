@@ -18,6 +18,7 @@ function Login() {
       if(localStorage.getItem('userInfo')&&localStorage.getItem('token'))navigate("deliveries")
     }, []);
     const loginAzure = async () => {
+      navigate("account")
     //   if(waiting)return
     //   pca.loginPopup({prompt: "select_account"})
     //   .then(async (res) => {
@@ -75,7 +76,15 @@ function Login() {
         }}>
           <img style={{width:'2in', paddingBottom:'1in'}} src={require('../assets/logo.png')} alt='logo'></img> 
           <img style={{width:'2.2in', paddingBottom:'0.2in'}} src={require('../assets/signinBtn.png')} onClick={loginAzure} alt='signin button'></img>
-          <GoogleLogin onSuccess={loginGoogle} />
+          <div style={{width:'2.19in'}}>
+            <GoogleLogin 
+              onSuccess={loginGoogle}
+              render={renderProps => (
+                <button style={{width:'2.2in', paddingBottom:'0.2in'}}>This is my custom Google button</button>
+              )} 
+              buttonText="Login"
+            />
+          </div>
         </div>
     );
 }
