@@ -197,8 +197,9 @@ function Account() {
         'HW1','HW2','HW3','HW4','HW5','HW6',
     ]
     let group_tags=[
-        'HW1','HW2','HW3','HW4','HW5','HW6','HW7','HW8','HW9','HW10','HW11',
+        'HW1','HW2','HW3','HW4','HW5','HW6','HW7','HW8','HW9','HW10','HW11','HW12','HW13','HW14','HW15',
     ]
+    let selected_tags=[]
     const content='<h2>fwqfwqfqwf</h2><p>qwrqwrwqr</p><p>qwrwqrq<i><strong>wrqwrq</strong></i>w</p><p></p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1. lol</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; a. helllo</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; b. quack</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2. hello</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3. hey</p><h3>dasdasfasfas</h3><p>asdsadasdasdasdasadad</p><p>asdasdadas</p>'
     const styles={
         account:{
@@ -348,7 +349,23 @@ function Account() {
                 fontSize:'0.20in',
                 padding:'0.02in',
                 paddingLeft:'0.15in',
-                paddingRight:'0.15in'
+                paddingRight:'0.15in',
+                border: '0.01in solid',
+                borderColor:'rgb(46,117,182)'
+            },
+            inactiveTag:{
+                marginBottom:'0.15in',
+                backgroundColor:'white',
+                height:'0.32in',
+                width:'fit-content',
+                borderRadius:'0.4in',
+                color:'rgb(46,117,182)',
+                fontSize:'0.20in',
+                padding:'0.02in',
+                paddingLeft:'0.15in',
+                paddingRight:'0.15in',
+                border: '0.01in solid',
+                borderColor:'rgb(46,117,182)'
             },
             bar:{
                 marginTop:'0.15in',
@@ -414,6 +431,38 @@ function Account() {
                 marginBottom:'0.2in'
             }
     }
+    let searchReply=(id)=>{
+        for(const i in replies){
+            if(replies[i].id===id)return replies[i].title
+        }
+        return null
+    }
+    let tagHandler=(tag,index)=>{
+        let active=false
+        for(const i in selected_tags){
+            if(selected_tags[i]===tag){
+                active=true
+                break
+            }
+        }
+        if(active){
+            selected_tags=selected_tags.filter((curTag)=>(curTag!==tag))
+            document.getElementById("group_tag_"+index).style.color='rgb(46,117,182)'
+            document.getElementById("group_tag_"+index).style.backgroundColor='white'
+        }else{
+            selected_tags.push(tag)
+            document.getElementById("group_tag_"+index).style.backgroundColor='rgb(46,117,182)'
+            document.getElementById("group_tag_"+index).style.color='white'
+        }
+        console.log(selected_tags)
+    }
+    let highlight=(id)=>{
+        if(document.getElementById("highlighter_"+id).style.backgroundColor==='rgb(46, 117, 182)'){
+            document.getElementById("highlighter_"+id).style.backgroundColor='rgb(255,192,0)'
+        }else{
+            document.getElementById("highlighter_"+id).style.backgroundColor='rgb(46,117,182)'
+        }
+    }
     return (
         <div className="Login" style={{
             display:'flex',
@@ -448,12 +497,16 @@ function Account() {
                     <div style={{width:'95%'}}>
                         <input style={styles.input} placeholder="Title"></input>
                         <div style={styles.tags}>
-                            {posts.map((block,index)=>(
-                                <div style={{
-                                    ...styles.tag,
-                                    marginLeft:index!==0?'0.1in':0
-                                }}>{"fhjafkashfkajsfkajfaks"}</div>
-                            ))}
+                            {group_tags.map((tag,index)=>
+                                (<div 
+                                    id = {"group_tag_"+index}
+                                    style={{
+                                        ...styles.inactiveTag,
+                                        marginLeft:index!==0?'0.1in':0
+                                    }} 
+                                    onClick={()=>{tagHandler(tag,index)}}
+                                >{tag}</div>)
+                            )}
                         </div>
                         <CKEditor
                             editor={ ClassicEditor }
@@ -568,7 +621,7 @@ function Account() {
                         </div>
                         <div>
                             {replies.map((reply,index)=>(
-                                <div>
+                                <div id={'comment_'+reply.id}>
                                     <div style={{
                                         display:'flex',
                                         flexDirection:'row',
@@ -580,13 +633,17 @@ function Account() {
                                             flexDirection:'row',
                                             justifyContent:'left'
                                         }}>
-                                            <div style={{
-                                                backgroundColor:'rgb(46,117,182)',
-                                                height:'0.3in',
-                                                width:'0.3in',
-                                                borderRadius:'0.3in',
-                                                marginRight:'0.3in'
-                                            }}></div>
+                                            <div 
+                                                id={"highlighter_"+reply.id}
+                                                style={{
+                                                    backgroundColor:'rgb(46,117,182)',
+                                                    height:'0.3in',
+                                                    width:'0.3in',
+                                                    borderRadius:'0.3in',
+                                                    marginRight:'0.3in'
+                                                }}
+                                                onClick={()=>{highlight(reply.id)}}
+                                            ></div>
                                             <div style={styles.title}>{reply.op_email}</div>
                                         </div>
                                         <div style={styles.timestamp}>{reply.timestamp}</div>
@@ -600,9 +657,15 @@ function Account() {
                                         marginTop:'0.008in'
                                     }}>
                                         {reply.reply_to!==null && <div style={styles.replyOg}>
-                                            <div style={styles.replyOgPost}>{"fqekfkqwfkjwqjdwqkjdqwdkjwqdkjwnqkwfjnqkjwnfkwqf"}</div>
+                                            <div 
+                                                style={styles.replyOgPost}
+                                                onClick={()=>{document.getElementById("comment_"+reply.reply_to).scrollIntoView({behavior: 'smooth'})}}
+                                            >
+                                                {searchReply(reply.reply_to)}
+                                            </div>
                                         </div>}
-                                        <div dangerouslySetInnerHTML={{ __html: content }}></div>
+                                        {reply.reply_to===null && <div style={{height:1}}></div>}
+                                        <div dangerouslySetInnerHTML={{ __html: reply.content }}></div>
                                         <div style={{
                                             width:'100%',
                                             display:'flex',
