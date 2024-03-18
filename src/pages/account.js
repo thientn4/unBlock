@@ -130,7 +130,7 @@ function Account() {
                 height:'0.25in'
             },
             search:{
-                width:'2.25in',
+                width:'2.55in',
                 borderRadius:'2.4in',
                 paddingLeft:'0.1in',
                 paddingRight:'0.1in',
@@ -169,7 +169,6 @@ function Account() {
         }}>
             <div style={styles.groups}>
                 <div style={styles.tools}>
-                    <img style={styles.tool} src={require('../assets/filter.png')} alt='logo'></img> 
                     <input style={styles.search} placeholder="search"></input>
                     <img style={styles.tool} src={require('../assets/add.png')} onClick={()=>{navigate("../group/edit")}} alt='logo'></img> 
                 </div>
