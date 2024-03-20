@@ -1,9 +1,10 @@
 import axios from 'axios';
+import React, { useEffect, useState } from "react";
 import {useNavigate} from 'react-router-dom';
 
 function Account() {
     const navigate=useNavigate();
-    let groups=[
+    let [groups,setGroups]=useState([
         {
             id:0,
             name:'Group One',
@@ -75,7 +76,7 @@ function Account() {
             owner:'ntmthien2001@gmail.com'
         },
 
-    ]
+    ])
     const styles={
         account:{
             display:'flex',
@@ -159,6 +160,23 @@ function Account() {
                 overflow:'hidden'
             }
     }
+    useEffect(()=>{
+        axios({
+            url:process.env.REACT_APP_BACKEND+'user/groups',
+            method:'GET',
+            timeout: 20000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            }
+        }).then((response)=>{
+            console.log(response)
+            // if(response.data.status==='success'){
+            // }else{
+            // }
+        }).catch((error)=>{
+        })
+    })
     return (
         <div className="Login" style={{
             display:'flex',

@@ -13,7 +13,7 @@ function Login() {
       },
     });
     useEffect(() => {
-      if(localStorage.getItem('token'))navigate("account")
+      //if(localStorage.getItem('token'))navigate("account")
     }, []);
     const loginAzure = async () => {
       pca.loginPopup({prompt: "select_account"})
