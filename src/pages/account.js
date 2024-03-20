@@ -202,7 +202,10 @@ function Account() {
             <div style={styles.account}>
                 <img style={styles.picture} src={require('../assets/picture.png')} alt='logo'></img> 
                 <div style={styles.email}>ntmthien01@gmail.com</div>
-                <div style={styles.button}  onClick={()=>{navigate("..")}}>sign out</div>
+                <div style={styles.button}  onClick={()=>{
+                    localStorage.clear()
+                    navigate("..")
+                }}>sign out</div>
             </div>
         </div>
     );
