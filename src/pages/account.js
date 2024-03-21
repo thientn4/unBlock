@@ -171,12 +171,12 @@ function Account() {
             }
         }).then((response)=>{
             console.log(response)
-            // if(response.data.status==='success'){
-            // }else{
-            // }
+            if(response.data.status==='success'){
+                setGroups(response.data.groups)
+            }
         }).catch((error)=>{
         })
-    })
+    },[])
     return (
         <div className="Login" style={{
             display:'flex',
