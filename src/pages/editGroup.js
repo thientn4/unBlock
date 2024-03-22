@@ -5,6 +5,13 @@ import {useNavigate} from 'react-router-dom';
 function EditGroup() {
   const navigate=useNavigate();
   let groups=['rewqgewfwfwqefewqfeqgqgqefweqfqwfewqfewq',2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]
+  const [newName,setName]=useState("")
+  const [newMember,setMember]=useState("")
+  const [newAdmin,setAdmin]=useState("")
+  const [newTag,setTag]=useState("")
+  let [members,setMembers]=useState([])
+  let [admins,setAdmins]=useState([localStorage.getItem('email')])
+  let [tags,setTags]=useState([])
   const styles={
     title:{
       color:'rgb(89,89,89)',
@@ -80,39 +87,117 @@ function EditGroup() {
             margin:'0.5in'
         }}>
           <div style={styles.title}>Group name:</div>
-          <input style={styles.input} placeholder="Group name"></input>
+          <input 
+            style={styles.input} 
+            placeholder="Group name"
+            value={newName}
+            onChange={(e) => setName(e.target.value)}
+          ></input>
           <div style={styles.title}>Add tags:</div>
-          <input style={styles.input} placeholder="Tag"></input>
+          <input 
+            style={styles.input} 
+            placeholder="Tag"
+            value={newTag}
+            onChange={(e) => setTag(e.target.value)}
+            onKeyDown={(e) =>{if(e.key === 'Enter' && newTag.trim()!==""){
+              for(let i in tags){
+                if(tags[i]===newTag.trim()){
+                  setTag("")
+                  return
+                }
+              }
+              setTags([...tags,newTag.trim()])
+              setTag("")
+            }}}
+          ></input>
           <div style={styles.scroller}>
-            {groups.map((group,index)=>(
+            {tags.map((item,index)=>(
               <div style={styles.row}>
-                <div style={styles.rowItem}>{group}</div>
-                <div>X</div>
+                <div style={styles.rowItem}>{item}</div>
+                <div onClick={()=>{setTags(tags.filter((o)=>o!==item))}}>X</div>
               </div>
             ))}
           </div>
           <div style={styles.title}>Add admins:</div>
-          <input style={styles.input} placeholder="Email"></input>
+          <input 
+            style={styles.input} 
+            placeholder="Email"
+            value={newAdmin}
+            onChange={(e) => setAdmin(e.target.value)}
+            onKeyDown={(e) =>{if(e.key === 'Enter' && newAdmin.trim()!==""){
+              for(let i in admins){
+                if(admins[i]===newAdmin.toLowerCase().trim()){
+                  setAdmin("")
+                  return
+                }
+              }
+              setAdmins([...admins,newAdmin.toLowerCase().trim()])
+              setAdmin("")
+            }}}
+          ></input>
           <div style={styles.scroller}>
-            {groups.map((group,index)=>(
+            {admins.map((item,index)=>(
               <div style={styles.row}>
-                <div style={styles.rowItem}>{group}</div>
-                <div>X</div>
+                <div style={styles.rowItem}>{item}</div>
+                {index!==0 && <div onClick={()=>{setAdmins(admins.filter((o)=>o!==item))}}>X</div>}
               </div>
             ))}
           </div>
           <div style={styles.title}>Add members:</div>
-          <input style={styles.input} placeholder="Email"></input>
+          <input 
+            style={styles.input} 
+            placeholder="Email"
+            value={newMember}
+            onChange={(e) => setMember(e.target.value)}
+            onKeyDown={(e) =>{if(e.key === 'Enter' && newMember.trim()!==""){
+              for(let i in members){
+                if(members[i]===newMember.toLowerCase().trim()){
+                  setMember("")
+                  return
+                }
+              }
+              setMembers([...members,newMember.toLowerCase().trim()])
+              setMember("")
+            }}}
+          ></input>
           <div style={styles.scroller}>
-            {groups.map((group,index)=>(
+            {members.map((item,index)=>(
               <div style={styles.row}>
-                <div style={styles.rowItem}>{group}</div>
-                <div>X</div>
+                <div style={styles.rowItem}>{item}</div>
+                <div onClick={()=>{setMembers(members.filter((o)=>o!==item))}}>X</div>
               </div>
             ))}
           </div>
           <div style={styles.buttons}>
-            <div style={styles.button} onClick={()=>{navigate(-1)}}>Add</div>
+            <div style={styles.button} onClick={()=>{
+              axios({
+                url:process.env.REACT_APP_BACKEND+'add/group',
+                method:'POST',
+                timeout: 20000,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token':localStorage.getItem('token')
+                },
+                data:JSON.stringify({
+                  name:newName,
+                  memberEmails:members,
+                  adminEmails:admins,
+                  tags:tags
+                })
+              }).then((response)=>{
+                console.log(response)
+                if(response.data==='success'){
+                  navigate(-1)
+                }else if(response.data==='invalid token'){
+                  alert("Session expired, please login again")
+                  navigate("../../")
+                }else{
+                  alert("failed to add group")
+                }
+              }).catch((error)=>{
+                alert("failed to add group")
+              })
+            }}>Add</div>
             <div style={styles.button} onClick={()=>{navigate(-1)}}>Cancel</div>
           </div>
         </div>

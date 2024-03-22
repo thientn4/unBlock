@@ -4,79 +4,7 @@ import {useNavigate} from 'react-router-dom';
 
 function Account() {
     const navigate=useNavigate();
-    let [groups,setGroups]=useState([
-        {
-            id:0,
-            name:'Group One',
-            owner:'ntmthien01@gmail.com'
-        },
-        {
-            id:1,
-            name:'Group Two',
-            owner:'ntmthien2001@gmail.com'
-        },
-        {
-            id:2,
-            name:'Group Three',
-            owner:'ntmthien01@gmail.com'
-        },
-        {
-            id:3,
-            name:'Group Four',
-            owner:'ntmthien01@gmail.com'
-        },
-        {
-            id:4,
-            name:'Group Five',
-            owner:'ntmthien2001@gmail.com'
-        },
-        {
-            id:5,
-            name:'Group Six',
-            owner:'ntmthien2001@gmail.com'
-        },
-        {
-            id:6,
-            name:'Group Seven',
-            owner:'ntmthien2001@gmail.com'
-        },
-        {
-            id:7,
-            name:'Group Eight',
-            owner:'ntmthien01@gmail.com'
-        },
-        {
-            id:8,
-            name:'Group Nine',
-            owner:'ntmthien2001@gmail.com'
-        },
-        {
-            id:9,
-            name:'Group Ten',
-            owner:'ntmthien2001@gmail.com'
-        },
-        {
-            id:10,
-            name:'Group Eleven',
-            owner:'ntmthien01@gmail.com'
-        },
-        {
-            id:11,
-            name:'Group Twelve',
-            owner:'ntmthien01@gmail.com'
-        },
-        {
-            id:12,
-            name:'Group Thirteen',
-            owner:'ntmthien2001@gmail.com'
-        },
-        {
-            id:13,
-            name:'Group Fourteen',
-            owner:'ntmthien2001@gmail.com'
-        },
-
-    ])
+    let [groups,setGroups]=useState([])
     const styles={
         account:{
             display:'flex',
@@ -173,6 +101,9 @@ function Account() {
             console.log(response)
             if(response.data.status==='success'){
                 setGroups(response.data.groups)
+            }else if(response.data.status==='invalid token'){
+                alert("Session expired, please login again")
+                navigate("../")
             }
         }).catch((error)=>{
         })
@@ -201,7 +132,7 @@ function Account() {
             </div>
             <div style={styles.account}>
                 <img style={styles.picture} src={require('../assets/picture.png')} alt='logo'></img> 
-                <div style={styles.email}>ntmthien01@gmail.com</div>
+                <div style={styles.email}>{localStorage.getItem('email')}</div>
                 <div style={styles.button}  onClick={()=>{
                     localStorage.clear()
                     navigate("..")

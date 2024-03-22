@@ -19,6 +19,7 @@ function Login() {
       pca.loginPopup({prompt: "select_account"})
       .then(async (res) => {
         // Handle successful login
+        localStorage.setItem('email', res.account.username.toLowerCase())
         localStorage.setItem('token', 'A'+res.idToken) // 'A' for Azure
         navigate("account")
       })
