@@ -88,7 +88,7 @@ function Account() {
                 overflow:'hidden'
             }
     }
-    useEffect(()=>{
+    let loadGroups=()=>{
         axios({
             url:process.env.REACT_APP_BACKEND+'user/groups',
             method:'GET',
@@ -104,9 +104,15 @@ function Account() {
             }else if(response.data.status==='invalid token'){
                 alert("Session expired, please login again")
                 navigate("../")
+            }else{
+                alert("Failed to load group")
             }
         }).catch((error)=>{
+            alert("Failed to load group")
         })
+    }
+    useEffect(()=>{
+        loadGroups()
     },[])
     return (
         <div className="Login" style={{
@@ -125,7 +131,32 @@ function Account() {
                     {groups.map((group,index)=>(
                         <div style={styles.row}>
                             <div style={styles.rowItem} onClick={()=>{navigate("../group")}}>{group.name}</div>
-                            <div>X</div>
+                            <div onClick={()=>{
+                                let isOwner=(group.ownerEmail===localStorage.getItem('email'))
+                                if(!window.confirm("Are you sure you want to "+(isOwner?"delete":"leave")+" group \""+group.name+"\"? Click OK to accept."))return
+                                axios({
+                                    url:process.env.REACT_APP_BACKEND+'remove/group?groupId='+group.id,
+                                    method:'POST',
+                                    timeout: 20000,
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'token':localStorage.getItem('token')
+                                    }
+                                }).then((response)=>{
+                                    console.log(response)
+                                    if(response.data.status==='success'){
+                                        alert(isOwner?("group \""+group.name+"\" removed"):("you have left group \""+group.name+"\""))
+                                        loadGroups()
+                                    }else if(response.data.status==='invalid token'){
+                                        alert("Session expired, please login again")
+                                        navigate("../")
+                                    }else{
+                                        alert("Failed to "+ (isOwner?"delete":"leave") +" group \""+group.name+"\"")
+                                    }
+                                }).catch((error)=>{
+                                    alert("Failed to "+ (isOwner?"delete":"leave") +" group \""+group.name+"\"")
+                                })
+                            }}>X</div>
                         </div>
                     ))}
                 </div>
