@@ -144,10 +144,10 @@ function Account() {
                                     }
                                 }).then((response)=>{
                                     console.log(response)
-                                    if(response.data.status==='success'){
+                                    if(response.data==='success'){
                                         alert(isOwner?("group \""+group.name+"\" removed"):("you have left group \""+group.name+"\""))
                                         loadGroups()
-                                    }else if(response.data.status==='invalid token'){
+                                    }else if(response.data==='invalid token'){
                                         alert("Session expired, please login again")
                                         navigate("../")
                                     }else{
