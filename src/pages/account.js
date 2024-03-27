@@ -90,7 +90,7 @@ function Account() {
     }
     let loadGroups=()=>{
         axios({
-            url:process.env.REACT_APP_BACKEND+'user/groups',
+            url:process.env.REACT_APP_ACCT_BACKEND+'user/groups',
             method:'GET',
             timeout: 20000,
             headers: {
@@ -130,12 +130,18 @@ function Account() {
                 <div style={styles.groupList}>
                     {groups.map((group,index)=>(
                         <div style={styles.row}>
-                            <div style={styles.rowItem} onClick={()=>{navigate("../group")}}>{group.name}</div>
+                            <div style={styles.rowItem} onClick={()=>{
+                                navigate("../group",{
+                                    state:{
+                                        group:group
+                                    }
+                                })
+                            }}>{group.name}</div>
                             <div onClick={()=>{
                                 let isOwner=(group.ownerEmail===localStorage.getItem('email'))
                                 if(!window.confirm("Are you sure you want to "+(isOwner?"delete":"leave")+" group \""+group.name+"\"? Click OK to accept."))return
                                 axios({
-                                    url:process.env.REACT_APP_BACKEND+'remove/group?groupId='+group.id,
+                                    url:process.env.REACT_APP_ACCT_BACKEND+'remove/group?groupId='+group.id,
                                     method:'POST',
                                     timeout: 20000,
                                     headers: {

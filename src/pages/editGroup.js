@@ -171,7 +171,7 @@ function EditGroup() {
           <div style={styles.buttons}>
             <div style={styles.button} onClick={()=>{
               axios({
-                url:process.env.REACT_APP_BACKEND+'add/group',
+                url:process.env.REACT_APP_ACCT_BACKEND+'add/group',
                 method:'POST',
                 timeout: 20000,
                 headers: {

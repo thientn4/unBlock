@@ -2,10 +2,12 @@ import axios from 'axios';
 import React, { useEffect, useState } from "react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 
 function Account() {
     const navigate=useNavigate();
+    const location=useLocation();
+    const curGroup=location.state===null?{}:location.state.group
     let [postEditor,setPostEditor]=useState(null);
     let [replyEditor,setReplyEditor]=useState(null);
     let [page,setPage]=useState(1);
@@ -488,7 +490,7 @@ function Account() {
                 </div>
                 <div style={styles.intros}>
                     <img style={styles.tool} src={require('../assets/account.png')} alt='logo' onClick={()=>{navigate("../account")}}></img> 
-                    <div style={styles.intro}> Group 1 </div>
+                    <div style={styles.intro}> {curGroup.name} </div>
                     <img style={styles.tool} src={require('../assets/edit.png')} alt='logo' onClick={()=>{navigate("edit")}}></img> 
                 </div>
             </div>
@@ -536,7 +538,35 @@ function Account() {
                                 <label style={styles.bottomItem}> private to admin </label>
                             </div>
                             <div style={styles.bottomSubBar}>
-                                <div style={styles.bottomItem} onClick={()=>{setPage(1)}}>post</div>
+                                <div style={styles.bottomItem} onClick={()=>{
+                                    axios({
+                                        url:process.env.REACT_APP_GROUP_BACKEND+'add/post',
+                                        method:'GET',
+                                        timeout: 20000,
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'token':localStorage.getItem('token')
+                                        },
+                                        // data:JSON.stringify({
+                                        //   name:newName,
+                                        //   memberEmails:members,
+                                        //   adminEmails:admins,
+                                        //   tags:tags
+                                        // })
+                                      }).then((response)=>{
+                                        console.log(response)
+                                        if(response.data==='success'){
+                                            setPage(1)
+                                        }else if(response.data==='invalid token'){
+                                            alert("Session expired, please login again")
+                                            navigate("../")
+                                        }else{
+                                            alert("failed to post")
+                                        }
+                                      }).catch((error)=>{
+                                        alert("failed to post")
+                                      })
+                                }}>post</div>
                                 <div style={styles.bottomItem} onClick={()=>{setPage(1)}}>cancel</div>
                             </div>
                         </div>
