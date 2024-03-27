@@ -190,7 +190,8 @@ function EditGroup() {
                   navigate(-1)
                 }else if(response.data==='invalid token'){
                   alert("Session expired, please login again")
-                  navigate("../../")
+                  localStorage.clear();
+                  window.location.assign(window.location.origin);
                 }else{
                   alert("failed to add group")
                 }

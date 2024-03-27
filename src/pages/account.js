@@ -103,7 +103,8 @@ function Account() {
                 setGroups(response.data.groups)
             }else if(response.data.status==='invalid token'){
                 alert("Session expired, please login again")
-                navigate("../")
+                localStorage.clear();
+                window.location.assign(window.location.origin);
             }else{
                 alert("Failed to load group")
             }
@@ -155,7 +156,8 @@ function Account() {
                                         loadGroups()
                                     }else if(response.data==='invalid token'){
                                         alert("Session expired, please login again")
-                                        navigate("../")
+                                        localStorage.clear();
+                                        window.location.assign(window.location.origin);
                                     }else{
                                         alert("Failed to "+ (isOwner?"delete":"leave") +" group \""+group.name+"\"")
                                     }

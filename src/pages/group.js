@@ -559,8 +559,10 @@ function Account() {
                                             setPage(1)
                                         }else if(response.data==='invalid token'){
                                             alert("Session expired, please login again")
-                                            navigate("../")
+                                            localStorage.clear();
+                                            window.location.assign(window.location.origin);
                                         }else{
+                                            console.log(response)
                                             alert("failed to post")
                                         }
                                       }).catch((error)=>{
