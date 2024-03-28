@@ -111,7 +111,7 @@ function Account() {
     let selected_tags=[]
     const content='<h2>fwqfwqfqwf</h2><p>qwrqwrwqr</p><p>qwrwqrq<i><strong>wrqwrq</strong></i>w</p><p></p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1. lol</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; a. helllo</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; b. quack</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2. hello</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3. hey</p><h3>dasdasfasfas</h3><p>asdsadasdasdasdasadad</p><p>asdasdadas</p>'
     const styles={
-        account:{
+        postContainer:{
             display:'flex',
             flexDirection:'column',
             backgroundColor:'white',
@@ -122,7 +122,7 @@ function Account() {
             position:'fixed',
             right:0
         },
-        groups:{
+        posts:{
             backgroundColor:'rgb(157,195,230)',
             height:'100svh',
             overflowY:'auto',
@@ -130,7 +130,7 @@ function Account() {
             position:'fixed',
             minWidth:'3.3in'
         },
-            groupList:{
+            postList:{
                 paddingTop:'0.45in',
                 paddingBottom:'0.45in'
             },
@@ -390,13 +390,13 @@ function Account() {
             height:'100svh',
             userSelect: 'none'
         }}>
-            <div style={styles.groups}>
+            <div style={styles.posts}>
                 <div style={styles.tools}>
                     <img style={styles.tool} src={require('../assets/filter.png')} alt='logo'></img> 
                     <input style={styles.search} placeholder="search"></input>
                     <img style={styles.tool} src={require('../assets/add.png')} alt='logo' onClick={()=>{setPage(3)}}></img> 
                 </div>
-                <div style={styles.groupList}>
+                <div style={styles.postList}>
                     {posts.map((block,index)=>(
                         <div style={styles.row}>
                             <div style={styles.title}>{block.title}</div>
@@ -411,7 +411,7 @@ function Account() {
                     <img style={styles.tool} src={require('../assets/edit.png')} alt='logo' onClick={()=>{navigate("edit")}}></img> 
                 </div>
             </div>
-            <div style={styles.account}>
+            <div style={styles.postContainer}>
                 {page===3 && <div style={styles.groupPage}>
                     <div style={{width:'95%'}}>
                         <input style={styles.input} placeholder="Title"></input>
