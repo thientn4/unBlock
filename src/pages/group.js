@@ -11,98 +11,7 @@ function Account() {
     let [postEditor,setPostEditor]=useState(null);
     let [replyEditor,setReplyEditor]=useState(null);
     let [page,setPage]=useState(1);
-    let posts=[
-        {
-            id:0,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:1,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:2,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:3,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:4,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:5,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:6,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:7,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:8,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:9,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-    ]
+    let [posts,setPosts]= useState([])
     let replies=[
         {
             id:0,
@@ -198,9 +107,7 @@ function Account() {
     let post_tags=[
         'HW1','HW2','HW3','HW4','HW5','HW6',
     ]
-    let group_tags=[
-        'HW1','HW2','HW3','HW4','HW5','HW6','HW7','HW8','HW9','HW10','HW11','HW12','HW13','HW14','HW15',
-    ]
+    let [group_tags,setGroupTags]=useState([])
     let selected_tags=[]
     const content='<h2>fwqfwqfqwf</h2><p>qwrqwrwqr</p><p>qwrwqrq<i><strong>wrqwrq</strong></i>w</p><p></p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1. lol</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; a. helllo</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; b. quack</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2. hello</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3. hey</p><h3>dasdasfasfas</h3><p>asdsadasdasdasdasadad</p><p>asdasdadas</p>'
     const styles={
@@ -215,31 +122,13 @@ function Account() {
             position:'fixed',
             right:0
         },
-            picture:{
-                height:'2in',
-                width:'2in',
-                marginBottom:'0.4in'
-            },
-            email:{
-                marginBottom:'0.3in',
-                color:'rgb(89,89,89)',
-                fontWeight:'bold',
-                fontSize:'0.20in'
-            },
-            button:{
-                backgroundColor:'rgb(46,117,182)',
-                height:'0.32in',
-                width:'1.2in',
-                borderRadius:'0.4in',
-                color:'white',
-                fontSize:'0.20in'
-            },
         groups:{
             backgroundColor:'rgb(157,195,230)',
             height:'100svh',
             overflowY:'auto',
             zIndex:100,
-            position:'fixed'
+            position:'fixed',
+            minWidth:'3.3in'
         },
             groupList:{
                 paddingTop:'0.45in',
@@ -465,6 +354,34 @@ function Account() {
             document.getElementById("highlighter_"+id).style.backgroundColor='rgb(46,117,182)'
         }
     }
+    let loadPosts=()=>{
+        axios({
+            url:process.env.REACT_APP_GROUP_BACKEND+'get/posts?groupId='+curGroup.id,
+            method:'GET',
+            timeout: 20000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            }
+        }).then((response)=>{
+            console.log(response)
+            if(response.data.status==='success'){
+                setGroupTags(response.data.tags)
+                setPosts(response.data.posts)
+            }else if(response.data.status==='invalid token'){
+                alert("Session expired, please login again")
+                localStorage.clear();
+                window.location.assign(window.location.origin);
+            }else{
+                alert("Failed to load group")
+            }
+        }).catch((error)=>{
+            alert("Failed to load group")
+        })
+    }
+    useEffect(()=>{
+        loadPosts()
+    },[])
     return (
         <div className="Login" style={{
             display:'flex',
@@ -541,7 +458,7 @@ function Account() {
                                 <div style={styles.bottomItem} onClick={()=>{
                                     axios({
                                         url:process.env.REACT_APP_GROUP_BACKEND+'add/post',
-                                        method:'GET',
+                                        method:'POST',
                                         timeout: 20000,
                                         headers: {
                                             'Content-Type': 'application/json',
