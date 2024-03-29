@@ -108,7 +108,10 @@ function Account() {
         'HW1','HW2','HW3','HW4','HW5','HW6',
     ]
     let [group_tags,setGroupTags]=useState([])
-    let selected_tags=[]
+    let selectedTags=[]
+    let [selectedPostTitle,setSelectedPostTitle]=useState("")
+    let [selectedPostContent,setSelectedPostContent]=useState("")
+    let [postIsPrivate,setPostIsPrivate]=useState(false)
     const content='<h2>fwqfwqfqwf</h2><p>qwrqwrwqr</p><p>qwrwqrq<i><strong>wrqwrq</strong></i>w</p><p></p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1. lol</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; a. helllo</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; b. quack</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2. hello</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3. hey</p><h3>dasdasfasfas</h3><p>asdsadasdasdasdasadad</p><p>asdasdadas</p>'
     const styles={
         postContainer:{
@@ -259,7 +262,6 @@ function Account() {
                 borderColor:'rgb(46,117,182)'
             },
             bar:{
-                marginTop:'0.15in',
                 marginBottom:'0.15in',
                 display:'flex',
                 flexDirection:'row',
@@ -330,22 +332,22 @@ function Account() {
     }
     let tagHandler=(tag,index)=>{
         let active=false
-        for(const i in selected_tags){
-            if(selected_tags[i]===tag){
+        for(const i in selectedTags){
+            if(selectedTags[i]===tag){
                 active=true
                 break
             }
         }
         if(active){
-            selected_tags=selected_tags.filter((curTag)=>(curTag!==tag))
+            selectedTags=selectedTags.filter((curTag)=>(curTag!==tag))
             document.getElementById("group_tag_"+index).style.color='rgb(46,117,182)'
             document.getElementById("group_tag_"+index).style.backgroundColor='white'
         }else{
-            selected_tags.push(tag)
+            selectedTags.push(tag)
             document.getElementById("group_tag_"+index).style.backgroundColor='rgb(46,117,182)'
             document.getElementById("group_tag_"+index).style.color='white'
         }
-        console.log(selected_tags)
+        console.log(selectedTags)
     }
     let highlight=(id)=>{
         if(document.getElementById("highlighter_"+id).style.backgroundColor==='rgb(46, 117, 182)'){
@@ -366,6 +368,7 @@ function Account() {
         }).then((response)=>{
             console.log(response)
             if(response.data.status==='success'){
+                console.log(response.data.posts)
                 setGroupTags(response.data.tags)
                 setPosts(response.data.posts)
             }else if(response.data.status==='invalid token'){
@@ -414,7 +417,12 @@ function Account() {
             <div style={styles.postContainer}>
                 {page===3 && <div style={styles.groupPage}>
                     <div style={{width:'95%'}}>
-                        <input style={styles.input} placeholder="Title"></input>
+                        <input 
+                            style={styles.input} 
+                            placeholder="Title"
+                            value={selectedPostTitle}
+                            onChange={(e) => setSelectedPostTitle(e.target.value)}
+                        ></input>
                         <div style={styles.tags}>
                             {group_tags.map((tag,index)=>
                                 (<div 
@@ -446,16 +454,28 @@ function Account() {
                                 setPostEditor(editor)
                             } }
                             onChange={ ( event ) => {
-                                console.log( postEditor.getData() );
+                                setSelectedPostContent(postEditor.getData());
                             } }
                         />
                         <div style={styles.bar}>
                             <div>
-                                <input type="checkbox"></input>
+                                <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)}></input>
                                 <label style={styles.bottomItem}> private to admin </label>
                             </div>
                             <div style={styles.bottomSubBar}>
                                 <div style={styles.bottomItem} onClick={()=>{
+                                    if(selectedPostTitle.trim()==="" || selectedPostContent.trim()===""){
+                                        alert("title and content are required")
+                                        return
+                                    }
+                                    console.log({
+                                        groupId:curGroup.id,
+                                        title:selectedPostTitle,
+                                        content:selectedPostContent,
+                                        isPrivate:postIsPrivate,
+                                        isHighlight:false,
+                                        tags:selectedTags
+                                      })
                                     axios({
                                         url:process.env.REACT_APP_GROUP_BACKEND+'add/post',
                                         method:'POST',
@@ -464,16 +484,22 @@ function Account() {
                                             'Content-Type': 'application/json',
                                             'token':localStorage.getItem('token')
                                         },
-                                        // data:JSON.stringify({
-                                        //   name:newName,
-                                        //   memberEmails:members,
-                                        //   adminEmails:admins,
-                                        //   tags:tags
-                                        // })
+                                        data:JSON.stringify({
+                                          groupId:curGroup.id,
+                                          title:selectedPostTitle,
+                                          content:selectedPostContent,
+                                          isPrivate:postIsPrivate,
+                                          isHighlight:false,
+                                          tags:selectedTags
+                                        })
                                       }).then((response)=>{
                                         console.log(response)
                                         if(response.data==='success'){
                                             setPage(1)
+                                            setSelectedPostTitle("")
+                                            setSelectedPostContent("")
+                                            selectedTags=[]
+                                            loadPosts()
                                         }else if(response.data==='invalid token'){
                                             alert("Session expired, please login again")
                                             localStorage.clear();
@@ -486,7 +512,12 @@ function Account() {
                                         alert("failed to post")
                                       })
                                 }}>post</div>
-                                <div style={styles.bottomItem} onClick={()=>{setPage(1)}}>cancel</div>
+                                <div style={styles.bottomItem} onClick={()=>{
+                                    setPage(1)
+                                    setSelectedPostTitle("")
+                                    setSelectedPostContent("")
+                                    selectedTags=[]
+                                }}>cancel</div>
                             </div>
                         </div>
                     </div>
