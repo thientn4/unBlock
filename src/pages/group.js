@@ -8,6 +8,7 @@ function Account() {
     const navigate=useNavigate();
     const location=useLocation();
     const curGroup=location.state===null?{}:location.state.group
+    let [curEdit,setCurEdit]=useState(null);
     let [curPost,setCurPost]=useState(null);
     let [curPostIndex,setCurPostIndex]=useState(null);
     let [postEditor,setPostEditor]=useState(null);
@@ -187,7 +188,7 @@ function Account() {
                 display:'flex',
                 flexDirection:'row',
                 justifyContent:'space-between',
-                width:'1.1in'
+                width:'1.5in'
             },
             replyOg:{
                 display:'flex',
@@ -240,8 +241,6 @@ function Account() {
     }
     let searchReply=(id)=>{
         for(const i in replies){
-            console.log(replies[i].content)
-            console.log(htmlToText(replies[i].content))
             if(replies[i].id===id)return htmlToText(replies[i].content)
         }
         return null
@@ -263,14 +262,36 @@ function Account() {
             document.getElementById("group_tag_"+index).style.backgroundColor='rgb(46,117,182)'
             document.getElementById("group_tag_"+index).style.color='white'
         }
-        console.log(selectedTags)
     }
     let highlight=(id)=>{
+        let highlight=false;
         if(document.getElementById("highlighter_"+id).style.backgroundColor==='rgb(46, 117, 182)'){
-            document.getElementById("highlighter_"+id).style.backgroundColor='rgb(255,192,0)'
+            document.getElementById("highlighter_"+id).style.backgroundColor='rgb(255,192,0)' //yellow
+            highlight=true;
         }else{
-            document.getElementById("highlighter_"+id).style.backgroundColor='rgb(46,117,182)'
+            document.getElementById("highlighter_"+id).style.backgroundColor='rgb(46,117,182)' //blue
         }
+        axios({
+            url:process.env.REACT_APP_GROUP_BACKEND+'highlight/post?postId='+id+"&highlight="+highlight,
+            method:'POST',
+            timeout: 20000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            }
+        }).then((response)=>{
+            if(response.data==='success'){
+                console.log("successful highlight")
+            }else if(response.data==='invalid token'){
+                alert("Session expired, please login again")
+                localStorage.clear();
+                window.location.assign(window.location.origin);
+            }else{
+                console.log("failed highlight")
+            }
+        }).catch((error)=>{
+            console.log("failed highlight")
+        })
     }
     let pickPost=(post)=>{
         setCurPost(post)
@@ -286,7 +307,6 @@ function Account() {
             if(response.data.status==='success'){
                 setPostTags(response.data.tags)
                 setReplies(response.data.posts)
-                console.log(response.data.posts)
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
                 localStorage.clear();
@@ -308,14 +328,12 @@ function Account() {
                 'token':localStorage.getItem('token')
             }
         }).then((response)=>{
-            console.log(response)
             if(response.data.status==='success'){
-                console.log(response.data.posts)
                 setGroupTags(response.data.tags)
                 setPosts(response.data.posts)
                 if(response.data.posts.length>0){
-                    pickPost(response.data.posts[0])
-                    setCurPostIndex(0)
+                    //pickPost(response.data.posts[0])
+                    //setCurPostIndex(0)
                 }
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
@@ -341,8 +359,8 @@ function Account() {
         }).then((response)=>{
             if(response.data==='success'){
                 postClean()
-                if(page==3)loadPosts()
-                if(page==2)pickPost(curPost)
+                if(page===3)loadPosts()
+                if(page===2)pickPost(curPost)
                 setPage(1)
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
@@ -353,6 +371,37 @@ function Account() {
             }
         }).catch((error)=>{
             alert("failed to post")
+        })
+    }
+    let deletePost=(postId,isReply)=>{
+        if(!window.confirm("Are you sure you want to delete this "+(isReply?"reply":"post")+"? Click OK to accept."))return
+        axios({
+            url:process.env.REACT_APP_GROUP_BACKEND+'delete/post?postId='+postId,
+            method:'POST',
+            timeout: 20000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            }
+        }).then((response)=>{
+            if(response.data==='success'){
+                if(isReply){
+                    pickPost(curPost)
+                }else{
+                    loadPosts()
+                    setCurPost(null)
+                    setCurPostIndex(null)
+                    setPage(1)
+                }
+            }else if(response.data==='invalid token'){
+                alert("Session expired, please login again")
+                localStorage.clear();
+                window.location.assign(window.location.origin);
+            }else{
+                alert("failed to delete post")
+            }
+        }).catch((error)=>{
+            alert("failed to delete post")
         })
     }
     let postClean=()=>{
@@ -376,7 +425,11 @@ function Account() {
                 <div style={styles.tools}>
                     <img style={styles.tool} src={require('../assets/filter.png')} alt='logo'></img> 
                     <input style={styles.search} placeholder="search"></input>
-                    <img style={styles.tool} src={require('../assets/add.png')} alt='logo' onClick={()=>{setPage(3)}}></img> 
+                    <img style={styles.tool} src={require('../assets/add.png')} alt='logo' onClick={()=>{
+                        setCurEdit(null)
+                        setSelectedPostTitle("")
+                        setPage(3)
+                    }}></img> 
                 </div>
                 <div style={styles.postList}>
                     {posts.map((block,index)=>(
@@ -384,6 +437,7 @@ function Account() {
                             style={{...styles.row,borderColor:index===curPostIndex?'rgb(46,117,182)':'white'}} 
                             key={index} 
                             onClick={()=>{
+                                setPage(1)
                                 pickPost(block,index)
                                 setCurPostIndex(index)
                             }}
@@ -436,6 +490,7 @@ function Account() {
                                     "redo"
                                 ]
                             }}
+                            data={curEdit?curEdit.content:""}
                             onReady={ editor => {
                                 // You can store the "editor" and use when it is needed.
                                 setPostEditor(editor)
@@ -446,7 +501,7 @@ function Account() {
                         />
                         <div style={styles.bar}>
                             <div>
-                                <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)}></input>
+                                <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)} checked={curEdit?curEdit.private:false}></input>
                                 <label style={styles.bottomItem}> private to admin </label>
                             </div>
                             <div style={styles.bottomSubBar}>
@@ -502,6 +557,7 @@ function Account() {
                                     "redo"
                                 ]
                             }}
+                            data={curEdit?curEdit.content:""}
                             onReady={ editor => {
                                 // You can store the "editor" and use when it is needed.
                                 setReplyEditor(editor)
@@ -512,7 +568,7 @@ function Account() {
                         />
                         <div style={styles.bar}>
                             <div>
-                                <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)}></input>
+                                <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)} checked={curEdit?curEdit.private:false}></input>
                                 <label style={styles.bottomItem}> private to OP & admin</label>
                             </div>
                             <div style={styles.bottomSubBar}>
@@ -560,8 +616,16 @@ function Account() {
                             }} dangerouslySetInnerHTML={{ __html: curPost.content }}></div>
                             <div style={styles.bar}>
                                 <div style={styles.bottomSubBar}>
-                                    <div style={styles.bottomItem} onClick={()=>{setPage(2)}}>reply</div>
-                                    <div style={styles.bottomItem}>delete</div>
+                                    <div style={styles.bottomItem} onClick={()=>{
+                                        setCurEdit(null)
+                                        setPage(2)
+                                    }}>reply</div>
+                                    <div style={styles.bottomItem} onClick={()=>{
+                                        setCurEdit(curPost)
+                                        setSelectedPostTitle(curPost.title)
+                                        setPage(3)
+                                    }}>edit</div>
+                                    <div style={styles.bottomItem} onClick={()=>{deletePost(curPost.id,false)}}>delete</div>
                                 </div>
                             </div>
                         </div>
@@ -583,7 +647,7 @@ function Account() {
                                             <div 
                                                 id={"highlighter_"+reply.id}
                                                 style={{
-                                                    backgroundColor:'rgb(46,117,182)',
+                                                    backgroundColor:reply.highlight?'rgb(255,192,0)':'rgb(46,117,182)',
                                                     height:'0.3in',
                                                     width:'0.3in',
                                                     borderRadius:'0.3in',
@@ -626,11 +690,15 @@ function Account() {
                                         }}>
                                             <div style={styles.bottomSubBar}>
                                                 <div style={styles.bottomItem} onClick={()=>{
-                                                    console.log(reply.id)
                                                     setReplyTo(reply)
+                                                    setCurEdit(null)
                                                     setPage(2)
                                                 }}>reply</div>
-                                                <div style={styles.bottomItem}>delete</div>
+                                                <div style={styles.bottomItem} onClick={()=>{
+                                                    setCurEdit(reply)
+                                                    setPage(2)
+                                                }}>edit</div>
+                                                <div style={styles.bottomItem}  onClick={()=>{deletePost(reply.id,true)}}>delete</div>
                                             </div>
                                         </div>
                                     </div>

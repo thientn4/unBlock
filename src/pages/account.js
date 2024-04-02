@@ -98,7 +98,6 @@ function Account() {
                 'token':localStorage.getItem('token')
             }
         }).then((response)=>{
-            console.log(response)
             if(response.data.status==='success'){
                 setGroups(response.data.groups)
             }else if(response.data==='invalid token'){
@@ -150,7 +149,6 @@ function Account() {
                                         'token':localStorage.getItem('token')
                                     }
                                 }).then((response)=>{
-                                    console.log(response)
                                     if(response.data==='success'){
                                         alert(isOwner?("group \""+group.name+"\" removed"):("you have left group \""+group.name+"\""))
                                         loadGroups()

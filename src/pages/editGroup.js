@@ -185,7 +185,6 @@ function EditGroup() {
                   tags:tags
                 })
               }).then((response)=>{
-                console.log(response)
                 if(response.data==='success'){
                   navigate(-1)
                 }else if(response.data==='invalid token'){
