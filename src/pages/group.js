@@ -245,14 +245,16 @@ function Account() {
         }
         return null
     }
-    let tagHandler=(tag,index)=>{
-        let active=false
+    let checkSelected=(tag)=>{
         for(const i in selectedTags){
             if(selectedTags[i]===tag){
-                active=true
-                break
+                return true
             }
         }
+        return false
+    }
+    let tagHandler=(tag,index)=>{
+        let active=checkSelected(tag)
         if(active){
             setSelectedTags(selectedTags.filter((curTag)=>(curTag!==tag)))
             document.getElementById("group_tag_"+index).style.color='rgb(46,117,182)'
@@ -427,6 +429,7 @@ function Account() {
                     <input style={styles.search} placeholder="search"></input>
                     <img style={styles.tool} src={require('../assets/add.png')} alt='logo' onClick={()=>{
                         setCurEdit(null)
+                        setSelectedTags([])
                         setSelectedPostTitle("")
                         setPage(3)
                     }}></img> 
@@ -469,7 +472,7 @@ function Account() {
                                     key={index}
                                     id = {"group_tag_"+index}
                                     style={{
-                                        ...styles.inactiveTag,
+                                        ...(!checkSelected(tag)?styles.inactiveTag:styles.tag),
                                         marginLeft:index!==0?'0.1in':0
                                     }} 
                                     onClick={()=>{tagHandler(tag,index)}}
@@ -623,6 +626,7 @@ function Account() {
                                     <div style={styles.bottomItem} onClick={()=>{
                                         setCurEdit(curPost)
                                         setSelectedPostTitle(curPost.title)
+                                        setSelectedTags(postTags)
                                         setPage(3)
                                     }}>edit</div>
                                     <div style={styles.bottomItem} onClick={()=>{deletePost(curPost.id,false)}}>delete</div>
