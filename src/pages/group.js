@@ -8,111 +8,20 @@ function Account() {
     const navigate=useNavigate();
     const location=useLocation();
     const curGroup=location.state===null?{}:location.state.group
+    let [curPost,setCurPost]=useState(null);
+    let [curPostIndex,setCurPostIndex]=useState(null);
     let [postEditor,setPostEditor]=useState(null);
     let [replyEditor,setReplyEditor]=useState(null);
     let [page,setPage]=useState(1);
     let [posts,setPosts]= useState([])
-    let replies=[
-        {
-            id:0,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:1,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:2,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:0,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:3,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:4,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:5,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:6,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:2,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:7,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:1,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:8,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:null,
-            op_email:'ntmthien01@gmail.com'
-        },
-        {
-            id:9,
-            title: 'otweuoweiruoweiruwerpewirewiuroweutoewutow',
-            timestamp: '03/05/2024 - 10:30',
-            content: 'TipRanks is investing a multitude of resources every day so millions of retail investors from around the world can access the same data as hedge funds and use top-notch research tools. To continue using TipRanks, please allow this domain to your ad blocker.',
-            is_private: true,
-            reply_to:6,
-            op_email:'ntmthien01@gmail.com'
-        },
-    ]
-    let post_tags=[
-        'HW1','HW2','HW3','HW4','HW5','HW6',
-    ]
-    let [group_tags,setGroupTags]=useState([])
-    let selectedTags=[]
+    let [replies,setReplies]= useState([])
+    let [postTags,setPostTags]=useState([])
+    let [groupTags,setGroupTags]=useState([])
+    let [selectedTags,setSelectedTags]=useState([])
     let [selectedPostTitle,setSelectedPostTitle]=useState("")
     let [selectedPostContent,setSelectedPostContent]=useState("")
     let [postIsPrivate,setPostIsPrivate]=useState(false)
-    const content='<h2>fwqfwqfqwf</h2><p>qwrqwrwqr</p><p>qwrwqrq<i><strong>wrqwrq</strong></i>w</p><p></p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1. lol</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; a. helllo</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; b. quack</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2. hello</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3. hey</p><h3>dasdasfasfas</h3><p>asdsadasdasdasdasadad</p><p>asdasdadas</p>'
+    let [replyTo, setReplyTo]=useState(null)
     const styles={
         postContainer:{
             display:'flex',
@@ -160,7 +69,7 @@ function Account() {
                 textAlign:'center'
             },
             row:{
-                width:'2.7in',
+                width:'2.64in',
                 display:'flex',
                 flexDirection:'column',
                 justifyContent:'space-between',
@@ -169,7 +78,9 @@ function Account() {
                 padding:'0.1in',
                 paddingLeft:'0.15in',
                 paddingRight:'0.15in',
-                borderRadius:'0.1in'
+                borderRadius:'0.1in',
+                border:'0.03in solid',
+                borderColor:'white'
             },
             title:{
                 textOverflow: 'ellipsis',
@@ -276,7 +187,7 @@ function Account() {
                 display:'flex',
                 flexDirection:'row',
                 justifyContent:'space-between',
-                width:'1.5in'
+                width:'1.1in'
             },
             replyOg:{
                 display:'flex',
@@ -324,9 +235,14 @@ function Account() {
                 marginBottom:'0.2in'
             }
     }
+    let htmlToText=(html)=>{
+        return html.replace(/<\/p><p>/g, ' ').replace(/<[^>]*>/g, "").replaceAll("&nbsp;", "")
+    }
     let searchReply=(id)=>{
         for(const i in replies){
-            if(replies[i].id===id)return replies[i].title
+            console.log(replies[i].content)
+            console.log(htmlToText(replies[i].content))
+            if(replies[i].id===id)return htmlToText(replies[i].content)
         }
         return null
     }
@@ -339,11 +255,11 @@ function Account() {
             }
         }
         if(active){
-            selectedTags=selectedTags.filter((curTag)=>(curTag!==tag))
+            setSelectedTags(selectedTags.filter((curTag)=>(curTag!==tag)))
             document.getElementById("group_tag_"+index).style.color='rgb(46,117,182)'
             document.getElementById("group_tag_"+index).style.backgroundColor='white'
         }else{
-            selectedTags.push(tag)
+            setSelectedTags([tag,...selectedTags])
             document.getElementById("group_tag_"+index).style.backgroundColor='rgb(46,117,182)'
             document.getElementById("group_tag_"+index).style.color='white'
         }
@@ -355,6 +271,32 @@ function Account() {
         }else{
             document.getElementById("highlighter_"+id).style.backgroundColor='rgb(46,117,182)'
         }
+    }
+    let pickPost=(post)=>{
+        setCurPost(post)
+        axios({
+            url:process.env.REACT_APP_GROUP_BACKEND+'get/replies?postId='+post.id,
+            method:'GET',
+            timeout: 20000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            }
+        }).then((response)=>{
+            if(response.data.status==='success'){
+                setPostTags(response.data.tags)
+                setReplies(response.data.posts)
+                console.log(response.data.posts)
+            }else if(response.data==='invalid token'){
+                alert("Session expired, please login again")
+                localStorage.clear();
+                window.location.assign(window.location.origin);
+            }else{
+                alert("Failed to load replies")
+            }
+        }).catch((error)=>{
+            alert("Failed to load replies")
+        })
     }
     let loadPosts=()=>{
         axios({
@@ -371,7 +313,11 @@ function Account() {
                 console.log(response.data.posts)
                 setGroupTags(response.data.tags)
                 setPosts(response.data.posts)
-            }else if(response.data.status==='invalid token'){
+                if(response.data.posts.length>0){
+                    pickPost(response.data.posts[0])
+                    setCurPostIndex(0)
+                }
+            }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
                 localStorage.clear();
                 window.location.assign(window.location.origin);
@@ -381,6 +327,39 @@ function Account() {
         }).catch((error)=>{
             alert("Failed to load group")
         })
+    }
+    let addPost=(post)=>{
+        axios({
+            url:process.env.REACT_APP_GROUP_BACKEND+'add/post',
+            method:'POST',
+            timeout: 20000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            },
+            data:JSON.stringify(post)
+        }).then((response)=>{
+            if(response.data==='success'){
+                postClean()
+                if(page==3)loadPosts()
+                if(page==2)pickPost(curPost)
+                setPage(1)
+            }else if(response.data==='invalid token'){
+                alert("Session expired, please login again")
+                localStorage.clear();
+                window.location.assign(window.location.origin);
+            }else{
+                alert("failed to post")
+            }
+        }).catch((error)=>{
+            alert("failed to post")
+        })
+    }
+    let postClean=()=>{
+        setSelectedPostTitle("")
+        setSelectedPostContent("")
+        setSelectedTags([])
+        setReplyTo(null)
     }
     useEffect(()=>{
         loadPosts()
@@ -401,10 +380,17 @@ function Account() {
                 </div>
                 <div style={styles.postList}>
                     {posts.map((block,index)=>(
-                        <div style={styles.row}>
+                        <div 
+                            style={{...styles.row,borderColor:index===curPostIndex?'rgb(46,117,182)':'white'}} 
+                            key={index} 
+                            onClick={()=>{
+                                pickPost(block,index)
+                                setCurPostIndex(index)
+                            }}
+                        >
                             <div style={styles.title}>{block.title}</div>
-                            <div style={styles.timestamp}>{block.timestamp}</div>
-                            <div style={styles.content}>{block.content}</div>
+                            <div style={styles.timestamp}>{new Date(block.timestamp).toString().substring(4,21)}</div>
+                            <div style={styles.content}>{htmlToText(block.content)}</div>
                         </div>
                     ))}
                 </div>
@@ -424,8 +410,9 @@ function Account() {
                             onChange={(e) => setSelectedPostTitle(e.target.value)}
                         ></input>
                         <div style={styles.tags}>
-                            {group_tags.map((tag,index)=>
+                            {groupTags.map((tag,index)=>
                                 (<div 
+                                    key={index}
                                     id = {"group_tag_"+index}
                                     style={{
                                         ...styles.inactiveTag,
@@ -468,55 +455,20 @@ function Account() {
                                         alert("title and content are required")
                                         return
                                     }
-                                    console.log({
+                                    addPost({
                                         groupId:curGroup.id,
+                                        replyTo:-1,
+                                        commentTo:-1,
                                         title:selectedPostTitle,
                                         content:selectedPostContent,
                                         isPrivate:postIsPrivate,
                                         isHighlight:false,
                                         tags:selectedTags
-                                      })
-                                    axios({
-                                        url:process.env.REACT_APP_GROUP_BACKEND+'add/post',
-                                        method:'POST',
-                                        timeout: 20000,
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'token':localStorage.getItem('token')
-                                        },
-                                        data:JSON.stringify({
-                                          groupId:curGroup.id,
-                                          title:selectedPostTitle,
-                                          content:selectedPostContent,
-                                          isPrivate:postIsPrivate,
-                                          isHighlight:false,
-                                          tags:selectedTags
-                                        })
-                                      }).then((response)=>{
-                                        console.log(response)
-                                        if(response.data==='success'){
-                                            setPage(1)
-                                            setSelectedPostTitle("")
-                                            setSelectedPostContent("")
-                                            selectedTags=[]
-                                            loadPosts()
-                                        }else if(response.data==='invalid token'){
-                                            alert("Session expired, please login again")
-                                            localStorage.clear();
-                                            window.location.assign(window.location.origin);
-                                        }else{
-                                            console.log(response)
-                                            alert("failed to post")
-                                        }
-                                      }).catch((error)=>{
-                                        alert("failed to post")
-                                      })
+                                    })
                                 }}>post</div>
                                 <div style={styles.bottomItem} onClick={()=>{
                                     setPage(1)
-                                    setSelectedPostTitle("")
-                                    setSelectedPostContent("")
-                                    selectedTags=[]
+                                    postClean()
                                 }}>cancel</div>
                             </div>
                         </div>
@@ -526,18 +478,18 @@ function Account() {
                     <div style={{width:'95%'}}>
                         <div style={styles.bar}>
                             <div style={styles.header}>
-                                {"fjefjewfewhfwkehkewhfkewfhdrdhfhyjygjjbjjhuukhk"}
+                                {curPost.title}
                             </div>
                         </div>
-                        <div style={{
+                        {replyTo && <div style={{
                             display:'flex',
                             flexDirection:'row'
                         }}>
                             <div style={styles.replyText}>Reply to</div>
                             <div style={styles.replyOg}>
-                                <div style={styles.replyOgPost}>{"fhjafkashfkajsfkajfakswfwefwefwefwegwegwegwegwegwegwegewgwgeegwewgwe"}</div>
+                                <div style={styles.replyOgPost}>{htmlToText(replyTo.content)}</div>
                             </div>
-                        </div>
+                        </div>}
                         <CKEditor
                             editor={ ClassicEditor }
                             config={{
@@ -555,32 +507,48 @@ function Account() {
                                 setReplyEditor(editor)
                             } }
                             onChange={ ( event ) => {
-                                console.log( replyEditor.getData() );
+                                setSelectedPostContent(replyEditor.getData());
                             } }
                         />
                         <div style={styles.bar}>
                             <div>
-                                <input type="checkbox"></input>
+                                <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)}></input>
                                 <label style={styles.bottomItem}> private to OP & admin</label>
                             </div>
                             <div style={styles.bottomSubBar}>
-                                <div style={styles.bottomItem} onClick={()=>{setPage(1)}}>post</div>
-                                <div style={styles.bottomItem} onClick={()=>{setPage(1)}}>cancel</div>
+                                <div style={styles.bottomItem} onClick={()=>{
+                                    if(selectedPostContent.trim()==="")return
+                                    addPost({
+                                        groupId:curGroup.id,
+                                        replyTo:replyTo?replyTo.id:-1,
+                                        commentTo:curPost.id,
+                                        title:null,
+                                        content:selectedPostContent,
+                                        isPrivate:postIsPrivate,
+                                        isHighlight:false,
+                                        tags:[]
+                                    })
+                                    setPage(1)
+                                }}>post</div>
+                                <div style={styles.bottomItem} onClick={()=>{
+                                    setPage(1)
+                                    postClean()
+                                }}>cancel</div>
                             </div>
                         </div>
                     </div>
                 </div>}
-                {page===1 && <div style={styles.groupPage}>
+                {page===1 && curPost && <div style={styles.groupPage}>
                     <div style={{width:'95%'}}>
                         <div style={styles.post}>
                             <div style={styles.bar}>
                                 <div style={styles.header}>
-                                    {"fjefjewfewhfwkehkewhfkewfhdrdhfhyjygjjbjjhuukhk"}
+                                    {curPost.title}
                                 </div>
                             </div>
                             <div style={styles.tags}>
-                                {post_tags.map((post_tag,index)=>(
-                                    <div style={{
+                                {postTags.map((post_tag,index)=>(
+                                    <div key = {index} style={{
                                         ...styles.tag,
                                         marginLeft:index!==0?'0.1in':0
                                     }}>{post_tag}</div>
@@ -589,19 +557,18 @@ function Account() {
                             <div style={{
                                 width:'100%',
                                 textAlign:'left'
-                            }} dangerouslySetInnerHTML={{ __html: content }}></div>
+                            }} dangerouslySetInnerHTML={{ __html: curPost.content }}></div>
                             <div style={styles.bar}>
-                                    <div style={styles.bottomItem}>make private</div>
                                 <div style={styles.bottomSubBar}>
                                     <div style={styles.bottomItem} onClick={()=>{setPage(2)}}>reply</div>
-                                    <div style={styles.bottomItem} onClick={()=>{setPage(3)}}>edit</div>
                                     <div style={styles.bottomItem}>delete</div>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            {replies.map((reply,index)=>(
-                                <div id={'comment_'+reply.id}>
+                            {replies.map((reply,index)=>{
+                                let replyToContent=searchReply(reply.replyTo)
+                                return (<div id={'comment_'+reply.id}>
                                     <div style={{
                                         display:'flex',
                                         flexDirection:'row',
@@ -622,29 +589,32 @@ function Account() {
                                                     borderRadius:'0.3in',
                                                     marginRight:'0.3in'
                                                 }}
-                                                onClick={()=>{highlight(reply.id)}}
+                                                onClick={(e)=>{highlight(reply.id)}}
                                             ></div>
-                                            <div style={styles.title}>{reply.op_email}</div>
+                                            <div style={styles.title}>{reply.opEmail}</div>
                                         </div>
-                                        <div style={styles.timestamp}>{reply.timestamp}</div>
+                                        <div style={styles.timestamp}>{new Date(reply.timestamp).toString().substring(4,21)}</div>
                                     </div>
                                     <div style={{
                                         marginLeft:'0.13in',
                                         borderLeft: '0.04in solid',
-                                        borderColor: 'rgb(46,117,182)',
+                                        borderColor: index!==(replies.length-1)?'rgb(46,117,182)':'white',
                                         paddingLeft:'0.44in',
                                         textAlign:'left',
                                         marginTop:'0.008in'
                                     }}>
-                                        {reply.reply_to!==null && <div style={styles.replyOg}>
+                                        {reply.replyTo !== null && reply.replyTo !== 0 && <div style={{
+                                                ...styles.replyOg,
+                                                ...(replyToContent===null?{backgroundColor:'rgb(157,195,230)'}:{})
+                                            }}>
                                             <div 
                                                 style={styles.replyOgPost}
-                                                onClick={()=>{document.getElementById("comment_"+reply.reply_to).scrollIntoView({behavior: 'smooth'})}}
+                                                onClick={()=>{if(replyToContent)document.getElementById("comment_"+reply.replyTo).scrollIntoView({behavior: 'smooth'})}}
                                             >
-                                                {searchReply(reply.reply_to)}
+                                                {replyToContent?replyToContent:'reply deleted'}
                                             </div>
                                         </div>}
-                                        {reply.reply_to===null && <div style={{height:1}}></div>}
+                                        {(reply.replyTo===null || reply.replyTo===0) && <div style={{height:1}}></div>}
                                         <div dangerouslySetInnerHTML={{ __html: reply.content }}></div>
                                         <div style={{
                                             width:'100%',
@@ -654,16 +624,18 @@ function Account() {
                                             paddingTop:'0.2in',
                                             paddingBottom:'0.3in'
                                         }}>
-                                            <div style={styles.bottomItem}>make private</div>
                                             <div style={styles.bottomSubBar}>
-                                                <div style={styles.bottomItem} onClick={()=>{setPage(2)}}>reply</div>
-                                                <div style={styles.bottomItem} onClick={()=>{setPage(2)}}>edit</div>
+                                                <div style={styles.bottomItem} onClick={()=>{
+                                                    console.log(reply.id)
+                                                    setReplyTo(reply)
+                                                    setPage(2)
+                                                }}>reply</div>
                                                 <div style={styles.bottomItem}>delete</div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                </div>)
+                            })}
                         </div>
                     </div>
                 </div>}

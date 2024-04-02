@@ -101,7 +101,7 @@ function Account() {
             console.log(response)
             if(response.data.status==='success'){
                 setGroups(response.data.groups)
-            }else if(response.data.status==='invalid token'){
+            }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
                 localStorage.clear();
                 window.location.assign(window.location.origin);
@@ -130,7 +130,7 @@ function Account() {
                 </div>
                 <div style={styles.groupList}>
                     {groups.map((group,index)=>(
-                        <div style={styles.row}>
+                        <div style={styles.row} key={index}>
                             <div style={styles.rowItem} onClick={()=>{
                                 navigate("../group",{
                                     state:{
