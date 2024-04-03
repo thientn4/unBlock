@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 
 function EditGroup() {
   const navigate=useNavigate();
+  const location=useLocation();
+  const curGroup=location.state===null?null:location.state.group
   let groups=['rewqgewfwfwqefewqfeqgqgqefweqfqwfewqfewq',2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]
-  const [newName,setName]=useState("")
+  const [newName,setName]=useState(curGroup?curGroup.name:"")
   const [newMember,setMember]=useState("")
   const [newAdmin,setAdmin]=useState("")
   const [newTag,setTag]=useState("")

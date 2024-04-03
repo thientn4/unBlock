@@ -454,7 +454,16 @@ function Account() {
                 <div style={styles.intros}>
                     <img style={styles.tool} src={require('../assets/account.png')} alt='logo' onClick={()=>{navigate("../account")}}></img> 
                     <div style={styles.intro}> {curGroup.name} </div>
-                    <img style={styles.tool} src={require('../assets/edit.png')} alt='logo' onClick={()=>{navigate("edit")}}></img> 
+                    <img 
+                        style={styles.tool} 
+                        src={require('../assets/edit.png')} 
+                        alt='logo' 
+                        onClick={()=>{navigate("edit",{
+                            state:{
+                                group:curGroup
+                            }
+                        })}}
+                    ></img> 
                 </div>
             </div>
             <div style={styles.postContainer}>
