@@ -6,7 +6,6 @@ function EditGroup() {
   const navigate=useNavigate();
   const location=useLocation();
   const curGroup=location.state===null?null:location.state.group
-  let groups=['rewqgewfwfwqefewqfeqgqgqefweqfqwfewqfewq',2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]
   let owner=curGroup?curGroup.ownerEmail:localStorage.getItem('email')
   const [newName,setName]=useState(curGroup?curGroup.name:"")
   const [newMember,setMember]=useState("")
@@ -14,7 +13,36 @@ function EditGroup() {
   const [newTag,setTag]=useState("")
   let [members,setMembers]=useState([])
   let [admins,setAdmins]=useState([owner])
-  let [tags,setTags]=useState([])
+  let [tags,setTags]=useState(curGroup?curGroup.tags:[])
+  useEffect(()=>{
+    if(!curGroup)return
+    axios({
+        url:process.env.REACT_APP_ACCT_BACKEND+'group/members?groupId='+curGroup.id,
+        method:'GET',
+        timeout: 20000,
+        headers: {
+            'Content-Type': 'application/json',
+            'token':localStorage.getItem('token')
+        }
+    }).then((response)=>{
+        if(response.data.status==='success'){
+          console.log(response.data.members.filter(member => member.isAdmin===false))
+          setMembers(response.data.members.filter((member) => (member.isAdmin===false)).map((member) => (member.email)))
+          setAdmins([
+            ...admins,
+            ...response.data.members.filter((member) => (member.isAdmin===true && member.email!==owner)).map((member) => (member.email))
+          ])
+        }else if(response.data==='invalid token'){
+            alert("Session expired, please login again")
+            localStorage.clear();
+            window.location.assign(window.location.origin);
+        }else{
+            alert("Failed to load group members")
+        }
+    }).catch((error)=>{
+        alert("Failed to load group members")
+    })
+  },[])
   const styles={
     title:{
       color:'rgb(89,89,89)',
@@ -174,7 +202,7 @@ function EditGroup() {
           <div style={styles.buttons}>
             <div style={styles.button} onClick={()=>{
               axios({
-                url:process.env.REACT_APP_ACCT_BACKEND+'add/group',
+                url:process.env.REACT_APP_ACCT_BACKEND+(curGroup?('edit/group?groupId='+curGroup.id):'add/group'),
                 method:'POST',
                 timeout: 20000,
                 headers: {
@@ -189,18 +217,18 @@ function EditGroup() {
                 })
               }).then((response)=>{
                 if(response.data==='success'){
-                  navigate(-1)
+                  navigate(curGroup?-2:-1)
                 }else if(response.data==='invalid token'){
                   alert("Session expired, please login again")
                   localStorage.clear();
                   window.location.assign(window.location.origin);
                 }else{
-                  alert("failed to add group")
+                  alert(curGroup?"failed to edit group":"failed to add group")
                 }
               }).catch((error)=>{
-                alert("failed to add group")
+                alert(curGroup?"failed to edit group":"failed to add group")
               })
-            }}>Add</div>
+            }}>{curGroup?"Edit":"Add"}</div>
             <div style={styles.button} onClick={()=>{navigate(-1)}}>Cancel</div>
           </div>
         </div>

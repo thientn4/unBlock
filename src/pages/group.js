@@ -460,7 +460,7 @@ function Account() {
                         alt='logo' 
                         onClick={()=>{navigate("edit",{
                             state:{
-                                group:curGroup
+                                group:{...curGroup,tags:groupTags} /// add groupTags to curGroup
                             }
                         })}}
                     ></img> 
