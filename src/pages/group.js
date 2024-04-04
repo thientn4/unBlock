@@ -253,6 +253,14 @@ function Account() {
         }
         return false
     }
+    let checkTagInGroup=(tag)=>{
+        for(const i in groupTags){
+            if(groupTags[i]===tag){
+                return true
+            }
+        }
+        return false
+    }
     let tagHandler=(tag,index)=>{
         let active=checkSelected(tag)
         if(active){
@@ -307,8 +315,8 @@ function Account() {
             }
         }).then((response)=>{
             if(response.data.status==='success'){
-                setPostTags(response.data.tags)
-                setReplies(response.data.posts)
+                setPostTags(response.data.tags.filter((tag)=>(checkTagInGroup(tag))))
+                setReplies(response.data.posts.sort((p1,p2)=>(p1.timestamp<p2.timestamp?-1:1)))
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
                 localStorage.clear();
@@ -320,7 +328,7 @@ function Account() {
             alert("Failed to load replies")
         })
     }
-    let loadPosts=()=>{
+    let loadPosts=(prePickId)=>{
         axios({
             url:process.env.REACT_APP_GROUP_BACKEND+'get/posts?groupId='+curGroup.id,
             method:'GET',
@@ -332,10 +340,22 @@ function Account() {
         }).then((response)=>{
             if(response.data.status==='success'){
                 setGroupTags(response.data.tags)
-                setPosts(response.data.posts)
-                if(response.data.posts.length>0){
-                    //pickPost(response.data.posts[0])
-                    //setCurPostIndex(0)
+                setPosts(response.data.posts.sort((p1,p2)=>(p1.timestamp<p2.timestamp?1:-1)))
+                if(prePickId){
+                    let prePickIndex=null
+                    for(const i in response.data.posts){
+                        if(response.data.posts[i].id===prePickId){
+                            prePickIndex=i
+                        }
+                    }
+                    if(prePickIndex){
+                        pickPost(response.data.posts[prePickIndex])
+                        //setCurPostIndex(prePickIndex) //////// fix bug
+                        setTimeout(function() { //Start the timer
+                            console.log(prePickIndex)
+                            setCurPostIndex(prePickIndex) //After 1 second, set render to true
+                        }.bind(this), 2000)
+                    }
                 }
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
@@ -373,6 +393,31 @@ function Account() {
             }
         }).catch((error)=>{
             alert("failed to post")
+        })
+    }
+    let editPost=(post,postId)=>{
+        axios({
+            url:process.env.REACT_APP_GROUP_BACKEND+'edit/post?postId='+postId,
+            method:'POST',
+            timeout: 20000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            },
+            data:JSON.stringify(post)
+        }).then((response)=>{
+            if(response.data==='success'){
+                loadPosts(postId)
+                setPage(1)
+            }else if(response.data==='invalid token'){
+                alert("Session expired, please login again")
+                localStorage.clear();
+                window.location.assign(window.location.origin);
+            }else{
+                alert("failed to update")
+            }
+        }).catch((error)=>{
+            alert("failed to update")
         })
     }
     let deletePost=(postId,isReply)=>{
@@ -431,6 +476,7 @@ function Account() {
                         setCurEdit(null)
                         setSelectedTags([])
                         setSelectedPostTitle("")
+                        setPostIsPrivate(false)
                         setPage(3)
                     }}></img> 
                 </div>
@@ -506,6 +552,8 @@ function Account() {
                             onReady={ editor => {
                                 // You can store the "editor" and use when it is needed.
                                 setPostEditor(editor)
+                                if(curEdit)setSelectedPostContent(curEdit.content)
+                                else setSelectedPostContent("")
                             } }
                             onChange={ ( event ) => {
                                 setSelectedPostContent(postEditor.getData());
@@ -513,7 +561,8 @@ function Account() {
                         />
                         <div style={styles.bar}>
                             <div>
-                                <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)} checked={curEdit?curEdit.private:false}></input>
+                                <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)} checked={postIsPrivate}></input>
+                                {/*  curEdit?curEdit.private:false*/}
                                 <label style={styles.bottomItem}> private to admin </label>
                             </div>
                             <div style={styles.bottomSubBar}>
@@ -522,17 +571,26 @@ function Account() {
                                         alert("title and content are required")
                                         return
                                     }
-                                    addPost({
-                                        groupId:curGroup.id,
-                                        replyTo:-1,
-                                        commentTo:-1,
-                                        title:selectedPostTitle,
-                                        content:selectedPostContent,
-                                        isPrivate:postIsPrivate,
-                                        isHighlight:false,
-                                        tags:selectedTags
-                                    })
-                                }}>post</div>
+                                    if(curEdit){
+                                        editPost({
+                                            title:selectedPostTitle,
+                                            content:selectedPostContent,
+                                            isPrivate:postIsPrivate,
+                                            tags:selectedTags
+                                        },curEdit.id)
+                                    }else{
+                                        addPost({
+                                            groupId:curGroup.id,
+                                            replyTo:-1,
+                                            commentTo:-1,
+                                            title:selectedPostTitle,
+                                            content:selectedPostContent,
+                                            isPrivate:postIsPrivate,
+                                            isHighlight:false,
+                                            tags:selectedTags
+                                        })
+                                    }
+                                }}>{curEdit?"update":"post"}</div>
                                 <div style={styles.bottomItem} onClick={()=>{
                                     setPage(1)
                                     postClean()
@@ -573,6 +631,8 @@ function Account() {
                             onReady={ editor => {
                                 // You can store the "editor" and use when it is needed.
                                 setReplyEditor(editor)
+                                if(curEdit)setSelectedPostContent(curEdit.content)
+                                else setSelectedPostContent("")
                             } }
                             onChange={ ( event ) => {
                                 setSelectedPostContent(replyEditor.getData());
@@ -580,24 +640,32 @@ function Account() {
                         />
                         <div style={styles.bar}>
                             <div>
-                                <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)} checked={curEdit?curEdit.private:false}></input>
+                                <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)} checked={postIsPrivate}></input>
                                 <label style={styles.bottomItem}> private to OP & admin</label>
                             </div>
                             <div style={styles.bottomSubBar}>
                                 <div style={styles.bottomItem} onClick={()=>{
                                     if(selectedPostContent.trim()==="")return
-                                    addPost({
-                                        groupId:curGroup.id,
-                                        replyTo:replyTo?replyTo.id:-1,
-                                        commentTo:curPost.id,
-                                        title:null,
-                                        content:selectedPostContent,
-                                        isPrivate:postIsPrivate,
-                                        isHighlight:false,
-                                        tags:[]
-                                    })
-                                    setPage(1)
-                                }}>post</div>
+                                    if(curEdit){
+                                        editPost({
+                                            title:null,
+                                            content:selectedPostContent,
+                                            isPrivate:postIsPrivate,
+                                            tags:[]
+                                        },curEdit.id)
+                                    }else{
+                                        addPost({
+                                            groupId:curGroup.id,
+                                            replyTo:replyTo?replyTo.id:-1,
+                                            commentTo:curPost.id,
+                                            title:null,
+                                            content:selectedPostContent,
+                                            isPrivate:postIsPrivate,
+                                            isHighlight:false,
+                                            tags:[]
+                                        })
+                                    }
+                                }}>{curEdit?"update":"post"}</div>
                                 <div style={styles.bottomItem} onClick={()=>{
                                     setPage(1)
                                     postClean()
@@ -630,12 +698,14 @@ function Account() {
                                 <div style={styles.bottomSubBar}>
                                     <div style={styles.bottomItem} onClick={()=>{
                                         setCurEdit(null)
+                                        setPostIsPrivate(false)
                                         setPage(2)
                                     }}>reply</div>
                                     <div style={styles.bottomItem} onClick={()=>{
                                         setCurEdit(curPost)
                                         setSelectedPostTitle(curPost.title)
                                         setSelectedTags(postTags)
+                                        setPostIsPrivate(curPost.private)
                                         setPage(3)
                                     }}>edit</div>
                                     <div style={styles.bottomItem} onClick={()=>{deletePost(curPost.id,false)}}>delete</div>
@@ -645,7 +715,7 @@ function Account() {
                         <div>
                             {replies.map((reply,index)=>{
                                 let replyToContent=searchReply(reply.replyTo)
-                                return (<div id={'comment_'+reply.id}>
+                                return (<div key={index} id={'comment_'+reply.id}>
                                     <div style={{
                                         display:'flex',
                                         flexDirection:'row',
@@ -705,10 +775,12 @@ function Account() {
                                                 <div style={styles.bottomItem} onClick={()=>{
                                                     setReplyTo(reply)
                                                     setCurEdit(null)
+                                                    setPostIsPrivate(false)
                                                     setPage(2)
                                                 }}>reply</div>
                                                 <div style={styles.bottomItem} onClick={()=>{
                                                     setCurEdit(reply)
+                                                    setPostIsPrivate(reply.private)
                                                     setPage(2)
                                                 }}>edit</div>
                                                 <div style={styles.bottomItem}  onClick={()=>{deletePost(reply.id,true)}}>delete</div>
