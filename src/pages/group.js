@@ -532,8 +532,6 @@ function Account() {
                             editor={ ClassicEditor }
                             config={{
                                 toolbar:[
-                                    "heading",
-                                    "|",
                                     "bold",
                                     "italic",
                                     "uploadImage",
