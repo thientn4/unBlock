@@ -8,21 +8,21 @@ function Account() {
     const navigate=useNavigate();
     const location=useLocation();
     const curGroup=location.state===null?{}:location.state.group
-    let [curEdit,setCurEdit]=useState(null);
-    let [curPost,setCurPost]=useState(null);
-    let [curPostIndex,setCurPostIndex]=useState(null);
-    let [postEditor,setPostEditor]=useState(null);
-    let [replyEditor,setReplyEditor]=useState(null);
-    let [page,setPage]=useState(1);
-    let [posts,setPosts]= useState([])
-    let [replies,setReplies]= useState([])
-    let [postTags,setPostTags]=useState([])
-    let [groupTags,setGroupTags]=useState([])
-    let [selectedTags,setSelectedTags]=useState([])
-    let [selectedPostTitle,setSelectedPostTitle]=useState("")
-    let [selectedPostContent,setSelectedPostContent]=useState("")
-    let [postIsPrivate,setPostIsPrivate]=useState(false)
-    let [replyTo, setReplyTo]=useState(null)
+    const [curEdit,setCurEdit]=useState(null);
+    const [curPost,setCurPost]=useState(null);
+    const [curPostIndex,setCurPostIndex]=useState(null);
+    const [postEditor,setPostEditor]=useState(null);
+    const [replyEditor,setReplyEditor]=useState(null);
+    const [page,setPage]=useState(1);
+    const [posts,setPosts]= useState([])
+    const [replies,setReplies]= useState([])
+    const [postTags,setPostTags]=useState([])
+    const [groupTags,setGroupTags]=useState([])
+    const [selectedTags,setSelectedTags]=useState([])
+    const [selectedPostTitle,setSelectedPostTitle]=useState("")
+    const [selectedPostContent,setSelectedPostContent]=useState("")
+    const [postIsPrivate,setPostIsPrivate]=useState(false)
+    const [replyTo, setReplyTo]=useState(null)
     const styles={
         postContainer:{
             display:'flex',
@@ -342,19 +342,13 @@ function Account() {
                 setGroupTags(response.data.tags)
                 setPosts(response.data.posts.sort((p1,p2)=>(p1.timestamp<p2.timestamp?1:-1)))
                 if(prePickId){
-                    let prePickIndex=null
                     for(const i in response.data.posts){
                         if(response.data.posts[i].id===prePickId){
-                            prePickIndex=i
+                            pickPost(response.data.posts[i])
+                            setCurPostIndex(i) // doesnt work
+                            //setCurPostIndex(0) // work
+                            break
                         }
-                    }
-                    if(prePickIndex){
-                        pickPost(response.data.posts[prePickIndex])
-                        //setCurPostIndex(prePickIndex) //////// fix bug
-                        setTimeout(function() { //Start the timer
-                            console.log(prePickIndex)
-                            setCurPostIndex(prePickIndex) //After 1 second, set render to true
-                        }.bind(this), 2000)
                     }
                 }
             }else if(response.data==='invalid token'){
@@ -407,7 +401,8 @@ function Account() {
             data:JSON.stringify(post)
         }).then((response)=>{
             if(response.data==='success'){
-                loadPosts(postId)
+                if(post.title) loadPosts(postId)
+                else loadPosts(curPost.id)
                 setPage(1)
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
