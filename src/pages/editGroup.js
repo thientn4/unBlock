@@ -228,7 +228,7 @@ function EditGroup() {
               }).catch((error)=>{
                 alert(curGroup?"failed to edit group":"failed to add group")
               })
-            }}>{curGroup?"Edit":"Add"}</div>
+            }}>{curGroup?"Update":"Add"}</div>
             <div style={styles.button} onClick={()=>{navigate(-1)}}>Cancel</div>
           </div>
         </div>
