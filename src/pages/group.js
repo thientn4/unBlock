@@ -5,6 +5,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {useLocation, useNavigate} from 'react-router-dom';
 
 function Account() {
+    const userEmail=localStorage.getItem('email')
     const navigate=useNavigate();
     const location=useLocation();
     const curGroup=location.state===null?{}:location.state.group
@@ -316,7 +317,7 @@ function Account() {
         }).then((response)=>{
             if(response.data.status==='success'){
                 setPostTags(response.data.tags.filter((tag)=>(checkTagInGroup(tag))))
-                setReplies(response.data.posts.sort((p1,p2)=>(p1.timestamp<p2.timestamp?-1:1)))
+                setReplies(response.data.posts.filter((reply)=>(!reply.private || reply.opEmail === userEmail || post.opEmail === userEmail || curGroup.isAdmin)).sort((p1,p2)=>(p1.timestamp<p2.timestamp?-1:1)))
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
                 localStorage.clear();
@@ -340,11 +341,12 @@ function Account() {
         }).then((response)=>{
             if(response.data.status==='success'){
                 setGroupTags(response.data.tags)
-                setPosts(response.data.posts.sort((p1,p2)=>(p1.timestamp<p2.timestamp?1:-1)))
+                let postRes=response.data.posts.filter((post)=>(!post.private || post.opEmail === userEmail || curGroup.isAdmin)).sort((p1,p2)=>(p1.timestamp<p2.timestamp?1:-1))
+                setPosts(postRes)
                 if(prePickId){
-                    for(const i in response.data.posts){
-                        if(response.data.posts[i].id===prePickId){
-                            pickPost(response.data.posts[i])
+                    for(const i in postRes){
+                        if(postRes[i].id===prePickId){
+                            pickPost(postRes[i])
                             setCurPostIndex(i-0) // not sure why but have to subtract by 0 for this to work (only subtraction work, "+*/" do not)
                             break
                         }
@@ -374,7 +376,7 @@ function Account() {
         }).then((response)=>{
             if(response.data==='success'){
                 postClean()
-                if(page===3)loadPosts()
+                if(page===3)loadPosts(curPost.id)
                 if(page===2)pickPost(curPost)
                 setPage(1)
             }else if(response.data==='invalid token'){
@@ -494,7 +496,7 @@ function Account() {
                 <div style={styles.intros}>
                     <img style={styles.tool} src={require('../assets/account.png')} alt='logo' onClick={()=>{navigate("../account")}}></img> 
                     <div style={styles.intro}> {curGroup.name} </div>
-                    <img 
+                    {curGroup.ownerEmail === userEmail && <img 
                         style={styles.tool} 
                         src={require('../assets/edit.png')} 
                         alt='logo' 
@@ -503,7 +505,8 @@ function Account() {
                                 group:{...curGroup,tags:groupTags} /// add groupTags to curGroup
                             }
                         })}}
-                    ></img> 
+                    ></img> }
+                    {curGroup.ownerEmail !== userEmail && <div style={{width:'0.25in'}}></div> }
                 </div>
             </div>
             <div style={styles.postContainer}>
@@ -693,14 +696,14 @@ function Account() {
                                         setPostIsPrivate(false)
                                         setPage(2)
                                     }}>reply</div>
-                                    <div style={styles.bottomItem} onClick={()=>{
+                                    {userEmail === curPost.opEmail && <div style={styles.bottomItem} onClick={()=>{
                                         setCurEdit(curPost)
                                         setSelectedPostTitle(curPost.title)
                                         setSelectedTags(postTags)
                                         setPostIsPrivate(curPost.private)
                                         setPage(3)
-                                    }}>edit</div>
-                                    <div style={styles.bottomItem} onClick={()=>{deletePost(curPost.id,false)}}>delete</div>
+                                    }}>edit</div>}
+                                    {userEmail === curPost.opEmail && <div style={styles.bottomItem} onClick={()=>{deletePost(curPost.id,false)}}>delete</div>}
                                 </div>
                             </div>
                         </div>
@@ -770,12 +773,12 @@ function Account() {
                                                     setPostIsPrivate(false)
                                                     setPage(2)
                                                 }}>reply</div>
-                                                <div style={styles.bottomItem} onClick={()=>{
+                                                {userEmail === reply.opEmail && <div style={styles.bottomItem} onClick={()=>{
                                                     setCurEdit(reply)
                                                     setPostIsPrivate(reply.private)
                                                     setPage(2)
-                                                }}>edit</div>
-                                                <div style={styles.bottomItem}  onClick={()=>{deletePost(reply.id,true)}}>delete</div>
+                                                }}>edit</div>}
+                                                {userEmail === reply.opEmail && <div style={styles.bottomItem}  onClick={()=>{deletePost(reply.id,true)}}>delete</div>}
                                             </div>
                                         </div>
                                     </div>
