@@ -731,7 +731,7 @@ function Account() {
                                                     borderRadius:'0.3in',
                                                     marginRight:'0.3in'
                                                 }}
-                                                onClick={(e)=>{highlight(reply.id)}}
+                                                onClick={(e)=>{if(curGroup.isAdmin)highlight(reply.id)}}
                                             ></div>
                                             <div style={styles.title}>{reply.opEmail}</div>
                                         </div>
