@@ -345,8 +345,7 @@ function Account() {
                     for(const i in response.data.posts){
                         if(response.data.posts[i].id===prePickId){
                             pickPost(response.data.posts[i])
-                            setCurPostIndex(i) // doesnt work
-                            //setCurPostIndex(0) // work
+                            setCurPostIndex(i-0) // not sure why but have to subtract by 0 for this to work (only subtraction work, "+*/" do not)
                             break
                         }
                     }
