@@ -705,6 +705,7 @@ function Account() {
                                     }}>edit</div>}
                                     {userEmail === curPost.opEmail && <div style={styles.bottomItem} onClick={()=>{deletePost(curPost.id,false)}}>delete</div>}
                                 </div>
+                                {curPost.editTimestamp && <div style={styles.bottomItem}>edited</div>}
                             </div>
                         </div>
                         <div>
@@ -734,6 +735,7 @@ function Account() {
                                                 onClick={(e)=>{if(curGroup.isAdmin)highlight(reply.id)}}
                                             ></div>
                                             <div style={styles.title}>{reply.opEmail}</div>
+                                            {reply.editTimestamp && <div style={{marginLeft:'0.15in',color:'rgb(46,117,182)'}}>edited</div>}
                                         </div>
                                         <div style={styles.timestamp}>{new Date(reply.timestamp).toString().substring(4,21)}</div>
                                     </div>
@@ -746,9 +748,9 @@ function Account() {
                                         marginTop:'0.008in'
                                     }}>
                                         {reply.replyTo !== null && reply.replyTo !== 0 && <div style={{
-                                                ...styles.replyOg,
-                                                ...(replyToContent===null?{backgroundColor:'rgb(157,195,230)'}:{})
-                                            }}>
+                                            ...styles.replyOg,
+                                            ...(replyToContent===null?{backgroundColor:'rgb(157,195,230)'}:{})
+                                        }}>
                                             <div 
                                                 style={styles.replyOgPost}
                                                 onClick={()=>{if(replyToContent)document.getElementById("comment_"+reply.replyTo).scrollIntoView({behavior: 'smooth'})}}
