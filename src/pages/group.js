@@ -16,6 +16,8 @@ function Account() {
     const [replyEditor,setReplyEditor]=useState(null);
     const [page,setPage]=useState(1);
     const [posts,setPosts]= useState([])
+    const [filteredPosts,setFilteredPosts]= useState([])
+    const [displayedPosts,setDisplayedPosts]= useState([])
     const [replies,setReplies]= useState([])
     const [postTags,setPostTags]=useState([])
     const [groupTags,setGroupTags]=useState([])
@@ -23,6 +25,8 @@ function Account() {
     const [selectedPostTitle,setSelectedPostTitle]=useState("")
     const [selectedPostContent,setSelectedPostContent]=useState("")
     const [postIsPrivate,setPostIsPrivate]=useState(false)
+    const [filter,setFilter]=useState(false)
+    const [filterTags,setFilterTags]=useState([])
     const [replyTo, setReplyTo]=useState(null)
     const styles={
         postContainer:{
@@ -254,6 +258,14 @@ function Account() {
         }
         return false
     }
+    let checkFiltered=(tag)=>{
+        for(const i in filterTags){
+            if(filterTags[i]===tag){
+                return true
+            }
+        }
+        return false
+    }
     let checkTagInGroup=(tag)=>{
         for(const i in groupTags){
             if(groupTags[i]===tag){
@@ -343,6 +355,12 @@ function Account() {
                 setGroupTags(response.data.tags)
                 let postRes=response.data.posts.filter((post)=>(!post.private || post.opEmail === userEmail || curGroup.isAdmin)).sort((p1,p2)=>(p1.timestamp<p2.timestamp?1:-1))
                 setPosts(postRes)
+                for(const i in filterTags){
+                    let tag = filterTags[i]
+                    postRes=postRes.filter((post)=>post.tags.includes(tag))
+                }
+                setFilteredPosts(postRes)
+                setDisplayedPosts(postRes)
                 if(prePickId){
                     for(const i in postRes){
                         if(postRes[i].id===prePickId){
@@ -376,8 +394,8 @@ function Account() {
         }).then((response)=>{
             if(response.data==='success'){
                 postClean()
-                if(page===3)loadPosts(curPost.id)
-                if(page===2)pickPost(curPost)
+                if(page===3)loadPosts(curPost?curPost.id:null)
+                if(page===2 && curPost)pickPost(curPost)
                 setPage(1)
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
@@ -466,32 +484,71 @@ function Account() {
         }}>
             <div style={styles.posts}>
                 <div style={styles.tools}>
-                    <img style={styles.tool} src={require('../assets/filter.png')} alt='logo'></img> 
-                    <input style={styles.search} placeholder="search"></input>
-                    <img style={styles.tool} src={require('../assets/add.png')} alt='logo' onClick={()=>{
+                    <img style={styles.tool} src={require(filter?'../assets/cancel.png':'../assets/filter.png')} alt='logo' onClick={()=>{
+                        setCurPost(null)
+                        setCurPostIndex(null)
+                        if(filter){
+                            let newPosts=posts
+                            for(const i in filterTags){
+                                let tag = filterTags[i]
+                                newPosts=newPosts.filter((post)=>post.tags.includes(tag))
+                            }
+                            setFilteredPosts(newPosts)
+                            setDisplayedPosts(newPosts)
+                        }
+                        setFilter(!filter)
+                    }}></img> 
+                    {!filter && <input style={styles.search} placeholder="search" onChange={
+                        (e) => {
+                            setCurPost(null)
+                            setCurPostIndex(null)
+                            setDisplayedPosts(filteredPosts.filter((post)=>(
+                                post.content.toLowerCase().includes(e.target.value.toLowerCase())
+                                ||
+                                post.title.toLowerCase().includes(e.target.value.toLowerCase())
+                            )))
+                        }
+                    }></input>}
+                    {!filter && <img style={styles.tool} src={require('../assets/add.png')} alt='logo' onClick={()=>{
                         setCurEdit(null)
                         setSelectedTags([])
                         setSelectedPostTitle("")
                         setPostIsPrivate(false)
                         setPage(3)
-                    }}></img> 
+                    }}></img> }
+                    {filter && <img style={styles.tool} src={require('../assets/reset.png')} alt='logo' onClick={()=>{setFilterTags([])}}></img> }
                 </div>
                 <div style={styles.postList}>
-                    {posts.map((block,index)=>(
-                        <div 
-                            style={{...styles.row,borderColor:index===curPostIndex?'rgb(46,117,182)':'white'}} 
-                            key={index} 
-                            onClick={()=>{
-                                setPage(1)
-                                pickPost(block,index)
-                                setCurPostIndex(index)
-                            }}
-                        >
-                            <div style={styles.title}>{block.title}</div>
-                            <div style={styles.timestamp}>{new Date(block.timestamp).toString().substring(4,21)}</div>
-                            <div style={styles.content}>{htmlToText(block.content)}</div>
-                        </div>
-                    ))}
+                    {!filter && <div>
+                        {displayedPosts.map((block,index)=>(
+                            <div 
+                                style={{...styles.row,borderColor:index===curPostIndex?'rgb(46,117,182)':'white'}} 
+                                key={index} 
+                                onClick={()=>{
+                                    setPage(1)
+                                    pickPost(block,index)
+                                    setCurPostIndex(index)
+                                }}
+                            >
+                                <div style={styles.title}>{block.title}</div>
+                                <div style={styles.timestamp}>{new Date(block.timestamp).toString().substring(4,21)}</div>
+                                <div style={styles.content}>{htmlToText(block.content)}</div>
+                            </div>
+                        ))}
+                    </div>}
+                    {filter && <div>
+                        {groupTags.map((tag,index)=>(
+                            <div
+                                style={{...styles.row,borderColor:checkFiltered(tag)?'rgb(46,117,182)':'white'}} 
+                                onClick={()=>{
+                                    if(checkFiltered(tag))setFilterTags(filterTags.filter((curTag)=>(curTag!==tag)))
+                                    else setFilterTags([...filterTags,tag])
+                                }}
+                            >
+                                {tag}
+                            </div>
+                        ))}
+                    </div>}
                 </div>
                 <div style={styles.intros}>
                     <img style={styles.tool} src={require('../assets/account.png')} alt='logo' onClick={()=>{navigate("../account")}}></img> 
