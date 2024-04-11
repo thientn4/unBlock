@@ -397,7 +397,7 @@ function Account() {
             data:JSON.stringify(post)
         }).then((response)=>{
             if(response.data==='success'){
-                alert("post added")
+                if(post.title)alert("post added")
                 postClean()
                 loadPosts(curPost?curPost.id:null)
                 setPage(1)
