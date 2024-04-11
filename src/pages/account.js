@@ -103,6 +103,7 @@ function Account() {
             }
         }).then((response)=>{
             if(response.data.status==='success'){
+                localStorage.setItem('email', response.data.email)
                 setGroups(response.data.groups)
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")

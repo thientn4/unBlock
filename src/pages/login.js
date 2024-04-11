@@ -28,8 +28,10 @@ function Login() {
         if(!String(error).includes("cancelled"))alert(`Login error: '${error}'`);
       });
     };
-    const loginGoogle = async(credential)=>{
-      console.log(credential)
+    const loginGoogle = async(obj)=>{
+      console.log(obj.credential)
+      localStorage.setItem('token', 'G'+obj.credential) // 'A' for Azure
+      navigate("account")
     }
     return (
         <div className="Login" style={{
