@@ -27,6 +27,7 @@ function Account() {
     const [filter,setFilter]=useState(false)
     const [filterTags,setFilterTags]=useState([])
     const [replyTo, setReplyTo]=useState(null)
+    const [searchText,setSearchText]=useState("")
     const styles={
         postContainer:{
             display:'flex',
@@ -363,6 +364,13 @@ function Account() {
                     postRes=postRes.filter((post)=>post.tags.includes(tag))
                 }
                 setFilteredPosts(postRes)
+                if(searchText!==""){
+                    postRes=postRes.filter((post)=>(
+                        post.content.toLowerCase().includes(searchText.toLowerCase())
+                        ||
+                        post.title.toLowerCase().includes(searchText.toLowerCase())
+                    ))
+                }
                 setDisplayedPosts(postRes)
                 if(prePickId){
                     for(const i in postRes){
@@ -495,12 +503,17 @@ function Account() {
                             }
                             setFilteredPosts(newPosts)
                             setDisplayedPosts(newPosts)
+                        }else{
+                            setSearchText("")
+                            setDisplayedPosts(filteredPosts)
+                            setCurPost(null)
                         }
                         setFilter(!filter)
                     }}></img> 
-                    {!filter && <input style={styles.search} placeholder="search" onChange={
+                    {!filter && <input style={styles.search} placeholder="search" value={searchText} onChange={
                         (e) => {
                             setCurPost(null)
+                            setSearchText(e.target.value)
                             setDisplayedPosts(filteredPosts.filter((post)=>(
                                 post.content.toLowerCase().includes(e.target.value.toLowerCase())
                                 ||
@@ -513,6 +526,9 @@ function Account() {
                         setSelectedTags([])
                         setSelectedPostTitle("")
                         setPostIsPrivate(false)
+                        setSearchText("")
+                        setDisplayedPosts(filteredPosts)
+                        setCurPost(null)
                         setPage(3)
                     }}></img> }
                     {filter && <img style={styles.tool} src={require('../assets/reset.png')} alt='logo' onClick={()=>{setFilterTags([])}}></img> }
