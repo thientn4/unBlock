@@ -11,7 +11,6 @@ function Account() {
     const curGroup=location.state===null?{}:location.state.group
     const [curEdit,setCurEdit]=useState(null);
     const [curPost,setCurPost]=useState(null);
-    const [curPostIndex,setCurPostIndex]=useState(null);
     const [postEditor,setPostEditor]=useState(null);
     const [replyEditor,setReplyEditor]=useState(null);
     const [page,setPage]=useState(1);
@@ -369,7 +368,6 @@ function Account() {
                     for(const i in postRes){
                         if(postRes[i].id===prePickId){
                             pickPost(postRes[i])
-                            setCurPostIndex(i-0) // not sure why but have to subtract by 0 for this to work (only subtraction work, "+*/" do not)
                             break
                         }
                     }
@@ -455,7 +453,6 @@ function Account() {
                 }else{
                     loadPosts()
                     setCurPost(null)
-                    setCurPostIndex(null)
                     setPage(1)
                 }
             }else if(response.data==='invalid token'){
@@ -490,7 +487,6 @@ function Account() {
                 <div style={styles.tools}>
                     <img style={{...styles.tool, borderColor:((filter || filterTags.length===0)?'white':'rgb(255,192,0)')}} src={require(filter?'../assets/cancel.png':'../assets/filter.png')} alt='logo' onClick={()=>{
                         setCurPost(null)
-                        setCurPostIndex(null)
                         if(filter){
                             let newPosts=posts
                             for(const i in filterTags){
@@ -505,7 +501,6 @@ function Account() {
                     {!filter && <input style={styles.search} placeholder="search" onChange={
                         (e) => {
                             setCurPost(null)
-                            setCurPostIndex(null)
                             setDisplayedPosts(filteredPosts.filter((post)=>(
                                 post.content.toLowerCase().includes(e.target.value.toLowerCase())
                                 ||
@@ -526,12 +521,11 @@ function Account() {
                     {!filter && <div>
                         {displayedPosts.map((block,index)=>(
                             <div 
-                                style={{...styles.row,borderColor:index===curPostIndex?'rgb(46,117,182)':'white'}} 
+                                style={{...styles.row,borderColor:block.id===(curPost?curPost.id:null)?'rgb(46,117,182)':'white'}} 
                                 key={index} 
                                 onClick={()=>{
                                     setPage(1)
                                     pickPost(block,index)
-                                    setCurPostIndex(index)
                                 }}
                             >
                                 <div style={styles.title}>{block.title}</div>
