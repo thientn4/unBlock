@@ -399,8 +399,7 @@ function Account() {
             if(response.data==='success'){
                 alert("post added")
                 postClean()
-                if(page===3)loadPosts(curPost?curPost.id:null)
-                if(page===2 && curPost)pickPost(curPost)
+                loadPosts(curPost?curPost.id:null)
                 setPage(1)
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
@@ -489,7 +488,7 @@ function Account() {
         }}>
             <div style={styles.posts}>
                 <div style={styles.tools}>
-                    <img style={{...styles.tool, borderColor:(filterTags.length===0?'white':'rgb(255,192,0)')}} src={require(filter?'../assets/cancel.png':'../assets/filter.png')} alt='logo' onClick={()=>{
+                    <img style={{...styles.tool, borderColor:((filter || filterTags.length===0)?'white':'rgb(255,192,0)')}} src={require(filter?'../assets/cancel.png':'../assets/filter.png')} alt='logo' onClick={()=>{
                         setCurPost(null)
                         setCurPostIndex(null)
                         if(filter){
