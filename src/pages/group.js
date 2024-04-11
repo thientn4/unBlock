@@ -63,8 +63,12 @@ function Account() {
                 width:'3.1in'
             },
             tool:{
-                width:'0.25in',
-                height:'0.25in'
+                width:'0.2in',
+                height:'0.2in', 
+                border:'0.03in solid',
+                borderRadius:'0.2in',
+                borderColor:'white',
+                backgroundColor:'white'
             },
             search:{
                 width:'2.25in',
@@ -393,6 +397,7 @@ function Account() {
             data:JSON.stringify(post)
         }).then((response)=>{
             if(response.data==='success'){
+                alert("post added")
                 postClean()
                 if(page===3)loadPosts(curPost?curPost.id:null)
                 if(page===2 && curPost)pickPost(curPost)
@@ -484,7 +489,7 @@ function Account() {
         }}>
             <div style={styles.posts}>
                 <div style={styles.tools}>
-                    <img style={styles.tool} src={require(filter?'../assets/cancel.png':'../assets/filter.png')} alt='logo' onClick={()=>{
+                    <img style={{...styles.tool, borderColor:(filterTags.length===0?'white':'rgb(255,192,0)')}} src={require(filter?'../assets/cancel.png':'../assets/filter.png')} alt='logo' onClick={()=>{
                         setCurPost(null)
                         setCurPostIndex(null)
                         if(filter){

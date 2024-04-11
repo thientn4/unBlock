@@ -55,8 +55,12 @@ function Account() {
                 width:'3.1in'
             },
             tool:{
-                width:'0.25in',
-                height:'0.25in'
+                width:'0.2in',
+                height:'0.2in', 
+                border:'0.03in solid',
+                borderRadius:'0.2in',
+                borderColor:'white',
+                backgroundColor:'white'
             },
             search:{
                 width:'2.55in',
