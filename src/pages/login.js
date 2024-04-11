@@ -28,8 +28,8 @@ function Login() {
         if(!String(error).includes("cancelled"))alert(`Login error: '${error}'`);
       });
     };
-    const loginGoogle = async()=>{
-
+    const loginGoogle = async(credential)=>{
+      console.log(credential)
     }
     return (
         <div className="Login" style={{
@@ -42,15 +42,41 @@ function Login() {
             userSelect: 'none'
         }}>
           <img style={{width:'2in', paddingBottom:'1in'}} src={require('../assets/logo.png')} alt='logo'></img> 
-          <img style={{width:'2.2in', paddingBottom:'0.2in'}} src={require('../assets/signinBtn.png')} onClick={loginAzure} alt='signin button'></img>
-          <div style={{width:'2.19in'}}>
-            <GoogleLogin 
-              onSuccess={loginGoogle}
-              render={renderProps => (
-                <button style={{width:'2.2in', paddingBottom:'0.2in'}}>This is my custom Google button</button>
-              )} 
-              buttonText="Login"
-            />
+          <div style={{
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'space-between',
+            width:'1.3in'
+          }}>
+            <div style={{
+              display:'flex',
+              flexDirection:'column',
+              width:'0.41in', 
+              height:'0.41in', 
+              borderRadius:'0.5in', 
+              justifyContent:'center',
+              alignItems:'center', 
+              border:'0.02in solid',
+              borderColor:'grey'
+            }}>
+              <img style={{width:'0.25in'}} src={require('../assets/signinBtn.png')} onClick={loginAzure} alt='signin button'></img>
+            </div>
+            <div style={{
+              display:'flex',
+              flexDirection:'column',
+              width:'0.45in', 
+              height:'0.45in', 
+              borderRadius:'0.5in', 
+              justifyContent:'center',
+              alignItems:'center', 
+              backgroundColor:'grey'
+            }}>
+              <GoogleLogin 
+                onSuccess={(credential)=>loginGoogle(credential)}
+                type="icon"
+                shape="circle"
+              />
+            </div>
           </div>
         </div>
     );
