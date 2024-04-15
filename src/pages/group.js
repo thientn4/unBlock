@@ -612,7 +612,11 @@ function Account() {
                                     "|",
                                     "undo",
                                     "redo"
-                                ]
+                                ],
+                                ckfinder: {
+                                    // Upload the images to the server using the CKFinder QuickUpload command.
+                                    uploadUrl: 'https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
+                                }
                             }}
                             data={curEdit?curEdit.content:""}
                             onReady={ editor => {
@@ -691,7 +695,11 @@ function Account() {
                                     "|",
                                     "undo",
                                     "redo"
-                                ]
+                                ],
+                                ckfinder: {
+                                    // Upload the images to the server using the CKFinder QuickUpload command.
+                                    uploadUrl: 'https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
+                                }
                             }}
                             data={curEdit?curEdit.content:""}
                             onReady={ editor => {
