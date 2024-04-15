@@ -104,7 +104,7 @@ function Account() {
         }).then((response)=>{
             if(response.data.status==='success'){
                 localStorage.setItem('email', response.data.email)
-                setGroups(response.data.groups)
+                setGroups(response.data.groups.sort((g1,g2)=>(g1.ownerEmail!==response.data.email?1:-1)))
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
                 localStorage.clear();
@@ -134,7 +134,7 @@ function Account() {
                 </div>
                 <div style={styles.groupList}>
                     {groups.map((group,index)=>(
-                        <div style={styles.row} key={index}>
+                        <div style={{...styles.row,...(group.ownerEmail===localStorage.getItem('email')?{backgroundColor:'rgb(255,255,204'}:{})}} key={index}>
                             <div style={styles.rowItem} onClick={()=>{
                                 navigate("../group",{
                                     state:{
