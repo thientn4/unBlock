@@ -618,6 +618,7 @@ function Account() {
                                     uploadUrl: 'https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
                                 },
                                 image:{
+                                    //https://craftcms.stackexchange.com/questions/41010/craft-4-ckeditor-5-image-resizeoptions-not-showing-in-image-toolbar
                                     "toolbar": []
                                 }
                             }}
@@ -704,6 +705,7 @@ function Account() {
                                     uploadUrl: 'https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
                                 },
                                 image:{
+                                    //https://craftcms.stackexchange.com/questions/41010/craft-4-ckeditor-5-image-resizeoptions-not-showing-in-image-toolbar
                                     "toolbar": []
                                 }
                             }}
