@@ -616,6 +616,9 @@ function Account() {
                                 ckfinder: {
                                     // Upload the images to the server using the CKFinder QuickUpload command.
                                     uploadUrl: 'https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
+                                },
+                                image:{
+                                    "toolbar": []
                                 }
                             }}
                             data={curEdit?curEdit.content:""}
@@ -699,6 +702,9 @@ function Account() {
                                 ckfinder: {
                                     // Upload the images to the server using the CKFinder QuickUpload command.
                                     uploadUrl: 'https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
+                                },
+                                image:{
+                                    "toolbar": []
                                 }
                             }}
                             data={curEdit?curEdit.content:""}
