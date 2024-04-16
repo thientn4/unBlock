@@ -5,6 +5,7 @@ import {useNavigate} from 'react-router-dom';
 function Account() {
     const navigate=useNavigate();
     let [groups,setGroups]=useState([])
+    let [displayedGroups,setDisplayedGroups]=useState([])
     const styles={
         account:{
             display:'flex',
@@ -104,7 +105,9 @@ function Account() {
         }).then((response)=>{
             if(response.data.status==='success'){
                 localStorage.setItem('email', response.data.email)
-                setGroups(response.data.groups.sort((g1,g2)=>(g1.ownerEmail===g2.ownerEmail?g1.name.localeCompare(g2.name):(g1.ownerEmail!==response.data.email?1:-1))))
+                let newGroups=response.data.groups.sort((g1,g2)=>(g1.ownerEmail===g2.ownerEmail?g1.name.localeCompare(g2.name):(g1.ownerEmail!==response.data.email?1:-1)))
+                setGroups(newGroups)
+                setDisplayedGroups(newGroups)
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
                 localStorage.clear();
@@ -129,11 +132,16 @@ function Account() {
         }}>
             <div style={styles.groups}>
                 <div style={styles.tools}>
-                    <input style={styles.search} placeholder="search"></input>
+                    <input style={styles.search} placeholder="search"  onChange={
+                        (e) => {
+                            setDisplayedGroups(groups.filter((group)=>(
+                                group.name.toLowerCase().includes(e.target.value.toLowerCase())
+                            )))
+                        }}></input>
                     <img style={styles.tool} src={require('../assets/add.png')} onClick={()=>{navigate("../group/edit")}} alt='logo'></img> 
                 </div>
                 <div style={styles.groupList}>
-                    {groups.map((group,index)=>(
+                    {displayedGroups.map((group,index)=>(
                         <div style={{...styles.row,...(group.ownerEmail===localStorage.getItem('email')?{backgroundColor:'rgb(255,255,204'}:{})}} key={index}>
                             <div style={styles.rowItem} onClick={()=>{
                                 navigate("../group",{
