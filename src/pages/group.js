@@ -529,7 +529,7 @@ function Account() {
                             setCurPost(null)
                             setSearchText(e.target.value)
                             setDisplayedPosts(filteredPosts.filter((post)=>(
-                                post.content.toLowerCase().includes(e.target.value.toLowerCase())
+                                htmlToText(post.content).toLowerCase().includes(e.target.value.toLowerCase())
                                 ||
                                 post.title.toLowerCase().includes(e.target.value.toLowerCase())
                             )))
