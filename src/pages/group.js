@@ -672,11 +672,11 @@ function Account() {
                                     {/*  curEdit?curEdit.private:false*/}
                                     <label style={styles.bottomItem}> private to admin </label>
                                 </div>
-                                <div>
+                                {curGroup.isAdmin && <div>
                                     <input type="checkbox" onChange = {(e)=>setPostHighlight(e.target.checked)} checked={postHighlight}></input>
                                     {/*  curEdit?curEdit.private:false*/}
                                     <label style={styles.bottomItem}> highlight </label>
-                                </div>
+                                </div>}
                             </div>
                             <div style={styles.bottomSubBar}>
                                 <div style={styles.bottomItem} onClick={()=>{
