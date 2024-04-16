@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from "react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import {useLocation, useNavigate} from 'react-router-dom';
 
 function Account() {
@@ -320,6 +320,20 @@ function Account() {
             console.log("failed highlight")
         })
     }
+    function modifyImageString(htmlString) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, 'text/html');
+      
+        const figures = doc.querySelectorAll('figure.image.image_resized');
+      
+        figures.forEach(figure => {
+          const img = figure.querySelector('img');
+          img.removeAttribute("height");
+          img.style.width = figure.style.width;
+        });
+      
+        return doc.body.innerHTML;
+      }
     let pickPost=(post)=>{
         setCurPost(post)
         axios({
@@ -602,8 +616,9 @@ function Account() {
                                 >{tag}</div>)
                             )}
                         </div>
+                        <div id="toolbar-container"></div>
                         <CKEditor
-                            editor={ ClassicEditor }
+                            editor={ DecoupledEditor }
                             config={{
                                 toolbar:[
                                     "bold",
@@ -624,6 +639,8 @@ function Account() {
                             }}
                             data={curEdit?curEdit.content:""}
                             onReady={ editor => {
+                                const toolbarContainer = document.querySelector( '#toolbar-container' );
+                                toolbarContainer.appendChild( editor.ui.view.toolbar.element );
                                 // You can store the "editor" and use when it is needed.
                                 setPostEditor(editor)
                                 if(curEdit)setSelectedPostContent(curEdit.content)
@@ -648,7 +665,7 @@ function Account() {
                                     if(curEdit){
                                         editPost({
                                             title:selectedPostTitle,
-                                            content:selectedPostContent,
+                                            content:modifyImageString(selectedPostContent),
                                             isPrivate:postIsPrivate,
                                             tags:selectedTags
                                         },curEdit.id)
@@ -658,7 +675,7 @@ function Account() {
                                             replyTo:-1,
                                             commentTo:-1,
                                             title:selectedPostTitle,
-                                            content:selectedPostContent,
+                                            content:modifyImageString(selectedPostContent),
                                             isPrivate:postIsPrivate,
                                             isHighlight:false,
                                             tags:selectedTags
@@ -689,8 +706,9 @@ function Account() {
                                 <div style={styles.replyOgPost}>{htmlToText(replyTo.content)}</div>
                             </div>
                         </div>}
+                        <div id="toolbar-container"></div>
                         <CKEditor
-                            editor={ ClassicEditor }
+                            editor={ DecoupledEditor }
                             config={{
                                 toolbar:[
                                     "bold",
@@ -711,6 +729,8 @@ function Account() {
                             }}
                             data={curEdit?curEdit.content:""}
                             onReady={ editor => {
+                                const toolbarContainer = document.querySelector( '#toolbar-container' );
+                                toolbarContainer.appendChild( editor.ui.view.toolbar.element );
                                 // You can store the "editor" and use when it is needed.
                                 setReplyEditor(editor)
                                 if(curEdit)setSelectedPostContent(curEdit.content)
@@ -731,7 +751,7 @@ function Account() {
                                     if(curEdit){
                                         editPost({
                                             title:null,
-                                            content:selectedPostContent,
+                                            content:modifyImageString(selectedPostContent),
                                             isPrivate:postIsPrivate,
                                             tags:[]
                                         },curEdit.id)
@@ -741,7 +761,7 @@ function Account() {
                                             replyTo:replyTo?replyTo.id:-1,
                                             commentTo:curPost.id,
                                             title:null,
-                                            content:selectedPostContent,
+                                            content:modifyImageString(selectedPostContent),
                                             isPrivate:postIsPrivate,
                                             isHighlight:false,
                                             tags:[]
