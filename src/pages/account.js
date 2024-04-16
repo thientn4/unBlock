@@ -104,7 +104,7 @@ function Account() {
         }).then((response)=>{
             if(response.data.status==='success'){
                 localStorage.setItem('email', response.data.email)
-                setGroups(response.data.groups.sort((g1,g2)=>(g1.ownerEmail!==response.data.email?1:-1)))
+                setGroups(response.data.groups.sort((g1,g2)=>(g1.ownerEmail===g2.ownerEmail?g1.name.localeCompare(g2.name):(g1.ownerEmail!==response.data.email?1:-1))))
             }else if(response.data==='invalid token'){
                 alert("Session expired, please login again")
                 localStorage.clear();
