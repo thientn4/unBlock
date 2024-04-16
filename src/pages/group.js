@@ -24,6 +24,7 @@ function Account() {
     const [selectedPostTitle,setSelectedPostTitle]=useState("")
     const [selectedPostContent,setSelectedPostContent]=useState("")
     const [postIsPrivate,setPostIsPrivate]=useState(false)
+    const [postHighlight,setPostHighlight]=useState(false)
     const [filter,setFilter]=useState(false)
     const [filterTags,setFilterTags]=useState([])
     const [replyTo, setReplyTo]=useState(null)
@@ -243,7 +244,12 @@ function Account() {
                 borderBottom: '0.04in solid',
                 borderColor: 'rgb(46,117,182)',
                 marginBottom:'0.2in'
-            }
+            },
+        contentInput:{
+            border: '0.5px solid',
+            borderRadius:'0.02in',
+            borderColor: 'rgb(192,192,192)'
+        }
     }
     let htmlToText=(html)=>{
         return html.replace(/<\/p><p>/g, ' ').replace(/<[^>]*>/g, "").replaceAll("&nbsp;", "")
@@ -371,7 +377,9 @@ function Account() {
         }).then((response)=>{
             if(response.data.status==='success'){
                 setGroupTags(response.data.tags)
-                let postRes=response.data.posts.filter((post)=>(!post.private || post.opEmail === userEmail || curGroup.isAdmin)).sort((p1,p2)=>(p1.timestamp<p2.timestamp?1:-1))
+                let postRes=response.data.posts
+                    .filter((post)=>(!post.private || post.opEmail === userEmail || curGroup.isAdmin))
+                    .sort((p1,p2)=>(p1.highlight===p2.highlight?(p1.timestamp<p2.timestamp?1:-1):(p1.highlight?-1:1)))
                 setPosts(postRes)
                 for(const i in filterTags){
                     let tag = filterTags[i]
@@ -540,6 +548,7 @@ function Account() {
                         setSelectedTags([])
                         setSelectedPostTitle("")
                         setPostIsPrivate(false)
+                        setPostHighlight(false)
                         setSearchText("")
                         setDisplayedPosts(filteredPosts)
                         setCurPost(null)
@@ -551,7 +560,11 @@ function Account() {
                     {!filter && <div>
                         {displayedPosts.map((block,index)=>(
                             <div 
-                                style={{...styles.row,borderColor:block.id===(curPost?curPost.id:null)?'rgb(46,117,182)':'white'}} 
+                                style={{
+                                    ...styles.row,
+                                    borderColor:block.id===(curPost?curPost.id:null)?'rgb(46,117,182)':(block.highlight?'rgb(255,255,204':'white'),
+                                    ...(block.highlight?{backgroundColor:'rgb(255,255,204'}:{})
+                                }} 
                                 key={index} 
                                 onClick={()=>{
                                     setPage(1)
@@ -617,44 +630,53 @@ function Account() {
                             )}
                         </div>
                         <div id="toolbar-container"></div>
-                        <CKEditor
-                            editor={ DecoupledEditor }
-                            config={{
-                                toolbar:[
-                                    "bold",
-                                    "italic",
-                                    "uploadImage",
-                                    "|",
-                                    "undo",
-                                    "redo"
-                                ],
-                                ckfinder: {
-                                    // Upload the images to the server using the CKFinder QuickUpload command.
-                                    uploadUrl: 'https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
-                                },
-                                image:{
-                                    //https://craftcms.stackexchange.com/questions/41010/craft-4-ckeditor-5-image-resizeoptions-not-showing-in-image-toolbar
-                                    "toolbar": []
-                                }
-                            }}
-                            data={curEdit?curEdit.content:""}
-                            onReady={ editor => {
-                                const toolbarContainer = document.querySelector( '#toolbar-container' );
-                                toolbarContainer.appendChild( editor.ui.view.toolbar.element );
-                                // You can store the "editor" and use when it is needed.
-                                setPostEditor(editor)
-                                if(curEdit)setSelectedPostContent(curEdit.content)
-                                else setSelectedPostContent("")
-                            } }
-                            onChange={ ( event ) => {
-                                setSelectedPostContent(postEditor.getData());
-                            } }
-                        />
+                        <div style={styles.contentInput}>
+                            <CKEditor
+                                editor={ DecoupledEditor }
+                                config={{
+                                    toolbar:[
+                                        "bold",
+                                        "italic",
+                                        "uploadImage",
+                                        "|",
+                                        "undo",
+                                        "redo"
+                                    ],
+                                    ckfinder: {
+                                        // Upload the images to the server using the CKFinder QuickUpload command.
+                                        uploadUrl: 'https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
+                                    },
+                                    image:{
+                                        //https://craftcms.stackexchange.com/questions/41010/craft-4-ckeditor-5-image-resizeoptions-not-showing-in-image-toolbar
+                                        "toolbar": []
+                                    }
+                                }}
+                                data={curEdit?curEdit.content:""}
+                                onReady={ editor => {
+                                    const toolbarContainer = document.querySelector( '#toolbar-container' );
+                                    toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+                                    // You can store the "editor" and use when it is needed.
+                                    setPostEditor(editor)
+                                    if(curEdit)setSelectedPostContent(curEdit.content)
+                                    else setSelectedPostContent("")
+                                } }
+                                onChange={ ( event ) => {
+                                    setSelectedPostContent(postEditor.getData());
+                                } }
+                            />
+                        </div>
                         <div style={styles.bar}>
-                            <div>
-                                <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)} checked={postIsPrivate}></input>
-                                {/*  curEdit?curEdit.private:false*/}
-                                <label style={styles.bottomItem}> private to admin </label>
+                            <div style={{...styles.bottomSubBar,width:'3in'}}>
+                                <div>
+                                    <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)} checked={postIsPrivate}></input>
+                                    {/*  curEdit?curEdit.private:false*/}
+                                    <label style={styles.bottomItem}> private to admin </label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" onChange = {(e)=>setPostHighlight(e.target.checked)} checked={postHighlight}></input>
+                                    {/*  curEdit?curEdit.private:false*/}
+                                    <label style={styles.bottomItem}> highlight </label>
+                                </div>
                             </div>
                             <div style={styles.bottomSubBar}>
                                 <div style={styles.bottomItem} onClick={()=>{
@@ -667,6 +689,7 @@ function Account() {
                                             title:selectedPostTitle,
                                             content:modifyImageString(selectedPostContent),
                                             isPrivate:postIsPrivate,
+                                            isHighlight:postHighlight,
                                             tags:selectedTags
                                         },curEdit.id)
                                     }else{
@@ -677,7 +700,7 @@ function Account() {
                                             title:selectedPostTitle,
                                             content:modifyImageString(selectedPostContent),
                                             isPrivate:postIsPrivate,
-                                            isHighlight:false,
+                                            isHighlight:postHighlight,
                                             tags:selectedTags
                                         })
                                     }
@@ -707,39 +730,41 @@ function Account() {
                             </div>
                         </div>}
                         <div id="toolbar-container"></div>
-                        <CKEditor
-                            editor={ DecoupledEditor }
-                            config={{
-                                toolbar:[
-                                    "bold",
-                                    "italic",
-                                    "uploadImage",
-                                    "|",
-                                    "undo",
-                                    "redo"
-                                ],
-                                ckfinder: {
-                                    // Upload the images to the server using the CKFinder QuickUpload command.
-                                    uploadUrl: 'https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
-                                },
-                                image:{
-                                    //https://craftcms.stackexchange.com/questions/41010/craft-4-ckeditor-5-image-resizeoptions-not-showing-in-image-toolbar
-                                    "toolbar": []
-                                }
-                            }}
-                            data={curEdit?curEdit.content:""}
-                            onReady={ editor => {
-                                const toolbarContainer = document.querySelector( '#toolbar-container' );
-                                toolbarContainer.appendChild( editor.ui.view.toolbar.element );
-                                // You can store the "editor" and use when it is needed.
-                                setReplyEditor(editor)
-                                if(curEdit)setSelectedPostContent(curEdit.content)
-                                else setSelectedPostContent("")
-                            } }
-                            onChange={ ( event ) => {
-                                setSelectedPostContent(replyEditor.getData());
-                            } }
-                        />
+                        <div style={styles.contentInput}>
+                            <CKEditor
+                                editor={ DecoupledEditor }
+                                config={{
+                                    toolbar:[
+                                        "bold",
+                                        "italic",
+                                        "uploadImage",
+                                        "|",
+                                        "undo",
+                                        "redo"
+                                    ],
+                                    ckfinder: {
+                                        // Upload the images to the server using the CKFinder QuickUpload command.
+                                        uploadUrl: 'https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
+                                    },
+                                    image:{
+                                        //https://craftcms.stackexchange.com/questions/41010/craft-4-ckeditor-5-image-resizeoptions-not-showing-in-image-toolbar
+                                        "toolbar": []
+                                    }
+                                }}
+                                data={curEdit?curEdit.content:""}
+                                onReady={ editor => {
+                                    const toolbarContainer = document.querySelector( '#toolbar-container' );
+                                    toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+                                    // You can store the "editor" and use when it is needed.
+                                    setReplyEditor(editor)
+                                    if(curEdit)setSelectedPostContent(curEdit.content)
+                                    else setSelectedPostContent("")
+                                } }
+                                onChange={ ( event ) => {
+                                    setSelectedPostContent(replyEditor.getData());
+                                } }
+                            />
+                        </div>
                         <div style={styles.bar}>
                             <div>
                                 <input type="checkbox" onChange = {(e)=>setPostIsPrivate(e.target.checked)} checked={postIsPrivate}></input>
@@ -753,6 +778,7 @@ function Account() {
                                             title:null,
                                             content:modifyImageString(selectedPostContent),
                                             isPrivate:postIsPrivate,
+                                            isHighlight:curEdit.highlight,
                                             tags:[]
                                         },curEdit.id)
                                     }else{
@@ -801,6 +827,7 @@ function Account() {
                                     <div style={styles.bottomItem} onClick={()=>{
                                         setCurEdit(null)
                                         setPostIsPrivate(false)
+                                        setPostHighlight(false)
                                         setPage(2)
                                     }}>reply</div>
                                     {userEmail === curPost.opEmail && <div style={styles.bottomItem} onClick={()=>{
@@ -808,6 +835,7 @@ function Account() {
                                         setSelectedPostTitle(curPost.title)
                                         setSelectedTags(postTags)
                                         setPostIsPrivate(curPost.private)
+                                        setPostHighlight(curPost.highlight)
                                         setPage(3)
                                     }}>edit</div>}
                                     {userEmail === curPost.opEmail && <div style={styles.bottomItem} onClick={()=>{deletePost(curPost.id,false)}}>delete</div>}
@@ -880,6 +908,7 @@ function Account() {
                                                     setReplyTo(reply)
                                                     setCurEdit(null)
                                                     setPostIsPrivate(false)
+                                                    setPostHighlight(false)
                                                     setPage(2)
                                                 }}>reply</div>
                                                 {userEmail === reply.opEmail && <div style={styles.bottomItem} onClick={()=>{
