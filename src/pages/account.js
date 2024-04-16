@@ -142,7 +142,7 @@ function Account() {
                 </div>
                 <div style={styles.groupList}>
                     {displayedGroups.map((group,index)=>(
-                        <div style={{...styles.row,...(group.ownerEmail===localStorage.getItem('email')?{backgroundColor:'rgb(255,255,204'}:{})}} key={index}>
+                        <div style={{...styles.row,...(group.isAdmin?{backgroundColor:'rgb(255,255,204'}:{})}} key={index}>
                             <div style={styles.rowItem} onClick={()=>{
                                 navigate("../group",{
                                     state:{
