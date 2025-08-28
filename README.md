@@ -8,18 +8,18 @@
 </ul>
 <br/>
 <div>User can sign in using their Microsoft or Google account</div>
-<img src="demo/Picture0.png">
+<img width="100%" src="demo/Picture0.png">
 <br/>
 <br/>
 <div>User can add new discussion groups or can be added to other’s discussion groups</div>
-<img src="demo/Picture1.png">
+<img width="100%" src="demo/Picture1.png">
 <br/>
 <div>For each group, user can see posts from other group members for discussion</div>
-<img src="demo/Picture2.png">
+<img width="100%" src="demo/Picture2.png">
 <br/>
 <div>For each post, user can see comments from other group members for discussion</div>
-<img src="demo/Picture3.png">
+<img width="100%" src="demo/Picture3.png">
 <br/>
 <div>For each group, user can post questions to discuss with other group members</div>
-<img src="demo/Picture4.png">
+<img width="100%" src="demo/Picture4.png">
 <br/>
